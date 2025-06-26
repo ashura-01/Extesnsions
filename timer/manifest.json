@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Focus - Study Timer",
+  "version": "1.0",
+  "description": "Minimal Pomodoro timer for focused study sessions",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "permissions": ["notifications"],
+  "icons": {
+    "48": "icon.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["ding.mp3"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

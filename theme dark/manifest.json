@@ -1,0 +1,60 @@
+{
+  "manifest_version": 3,
+  "name": "Grey-Black Cyan Theme",
+  "version": "1.0",
+  "description": "Dark grey frame, black tabs, cyan active tab title, white text/icons.",
+  "theme": {
+    "colors": {
+      "frame": [
+        29,
+        43,
+        70
+      ],
+      "toolbar": [
+        0,
+        0,
+        0
+      ],
+      "tab_background_text": [
+        255,
+        255,
+        255
+      ],
+      "tab_background_separator": [
+        0,
+        0,
+        0
+      ],
+      "tab_text": [
+        102,
+        255,
+        255
+      ],
+      "bookmark_text": [
+        255,
+        255,
+        255
+      ],
+      "ntp_background": [
+        0,
+        0,
+        0
+      ],
+      "ntp_text": [
+        255,
+        255,
+        255
+      ],
+      "button_background": [
+        0,
+        0,
+        0
+      ],
+      "toolbar_bottom_separator": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}

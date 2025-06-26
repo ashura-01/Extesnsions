@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #121212 0%, #1e1e2f 100%);
+  color: #e0e0e0;
+  width: 320px;
+  height: 310px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  box-sizing: border-box;
+}
+
+.container {
+  text-align: center;
+  padding: 25px 20px;
+  width: 90%;
+  background: #1a1a2e;
+  border-radius: 20px;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.5),
+    inset 0 -3px 5px rgba(255, 255, 255, 0.05);
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 1.8rem;
+  margin: 20px 0 20px 0; /* top right bottom left */
+  margin-top: 70px; /* add extra space above */
+  color: #00bfff;
+  letter-spacing: 1.2px;
+  /* text-shadow removed */
+}
+
+.timer {
+  font-size: 3rem;              /* smaller font size */
+  font-weight: 700;
+  letter-spacing: 4px;          /* tighter spacing */
+  color: #f5f7f7;               /* cyan color */
+  border: 3px solid #00bfff;    /* cyan border */
+  border-radius: 50%;           /* circle shape */
+  width: 165px;
+  height: 160px;
+  
+  display: flex;                /* flex container */
+  align-items: center;          /* vertical center */
+  justify-content: center;      /* horizontal center */
+  
+  margin: 0 auto 25px;          /* center horizontally with margin below */
+  box-sizing: border-box;
+  user-select: none;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;             /* prevent overflow */
+  white-space: nowrap;          /* prevent line breaks */
+}
+
+
+
+input#timeInput {
+  width: 60%;
+  margin-bottom: 25px;
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  background: #121216;
+  color: #2be7d9;
+  /* Removed inset glow box-shadow */
+  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+input#timeInput::placeholder {
+  color: #444c58;
+  font-weight: 400;
+}
+
+input#timeInput:focus {
+  /* Removed glowing box-shadow on focus */
+  box-shadow: none;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #121212;
+  background: #2bafe7;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  /* Removed box-shadow for glow */
+  transition: background 0.3s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+button:hover {
+  background: #0ee7ff;
+  transform: translateY(-2px);
+  /* Removed hover box-shadow glow */
+}
+
+button:active {
+  transform: translateY(0);
+  /* Removed active box-shadow glow */
+}
+
+button:disabled {
+  background: #444c58;
+  cursor: default;
+  box-shadow: none;
+  color: #222;
+}
