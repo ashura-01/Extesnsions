@@ -47,7 +47,7 @@ function renderTasks() {
     pencilIcon.setAttribute("height", "20");
 
     const pencilPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    pencilPath.setAttribute("fill", "#007bff");
+    pencilPath.setAttribute("fill", "#00bfff");
     pencilPath.setAttribute("d", "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34a1.25 1.25 0 0 0 0-1.77l-2-2a1.25 1.25 0 0 0-1.77 0l-1.83 1.83 3.75 3.75 1.85-1.81z");
 
     pencilIcon.appendChild(pencilPath);
@@ -92,7 +92,7 @@ function renderTasks() {
     binIcon.setAttribute("height", "22");
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("fill", "#007bff");
+    path.setAttribute("fill", "#00bfff");
     path.setAttribute("d", "M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z");
 
     binIcon.appendChild(path);
