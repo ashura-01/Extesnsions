@@ -1,10 +1,17 @@
 const taskInput = document.getElementById("taskInput");
 const taskList = document.getElementById("taskList");
 
-let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+let tasks = [];
+
+function loadTasks() {
+  chrome.storage.sync.get(["tasks"], (result) => {
+    tasks = result.tasks || [];
+    renderTasks();
+  });
+}
 
 function saveTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  chrome.storage.sync.set({ tasks });
 }
 
 function renderTasks() {
@@ -17,7 +24,6 @@ function renderTasks() {
 
     if (task.completed) li.classList.add("completed");
 
-    // Checkbox
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = task.completed;
@@ -28,12 +34,10 @@ function renderTasks() {
     };
     checkbox.style.marginRight = "15px";
 
-    // Task text span
     const span = document.createElement("span");
     span.textContent = task.text;
     span.style.flex = "1";
 
-    // Edit Button with Cyan Pencil Icon
     const editBtn = document.createElement("button");
     editBtn.style.background = "none";
     editBtn.style.border = "none";
@@ -41,15 +45,12 @@ function renderTasks() {
     editBtn.style.marginLeft = "10px";
 
     const pencilIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    pencilIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     pencilIcon.setAttribute("viewBox", "0 0 24 24");
     pencilIcon.setAttribute("width", "20");
     pencilIcon.setAttribute("height", "20");
-
     const pencilPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
     pencilPath.setAttribute("fill", "#00bfff");
     pencilPath.setAttribute("d", "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34a1.25 1.25 0 0 0 0-1.77l-2-2a1.25 1.25 0 0 0-1.77 0l-1.83 1.83 3.75 3.75 1.85-1.81z");
-
     pencilIcon.appendChild(pencilPath);
     editBtn.appendChild(pencilIcon);
 
@@ -78,7 +79,6 @@ function renderTasks() {
       input.addEventListener("blur", saveEdit);
     };
 
-    // Delete button with bin icon
     const deleteBtn = document.createElement("button");
     deleteBtn.style.background = "none";
     deleteBtn.style.border = "none";
@@ -86,15 +86,12 @@ function renderTasks() {
     deleteBtn.style.marginLeft = "10px";
 
     const binIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    binIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     binIcon.setAttribute("viewBox", "0 0 24 24");
     binIcon.setAttribute("width", "22");
     binIcon.setAttribute("height", "22");
-
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("fill", "#00bfff");
     path.setAttribute("d", "M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z");
-
     binIcon.appendChild(path);
     deleteBtn.appendChild(binIcon);
 
@@ -104,7 +101,6 @@ function renderTasks() {
       renderTasks();
     };
 
-    // Append all
     li.appendChild(checkbox);
     li.appendChild(span);
     li.appendChild(editBtn);
@@ -113,7 +109,6 @@ function renderTasks() {
   });
 }
 
-// Add task at the top
 taskInput.addEventListener("keypress", function (e) {
   if (e.key === "Enter" && taskInput.value.trim() !== "") {
     tasks.unshift({ text: taskInput.value.trim(), completed: false });
@@ -123,4 +118,4 @@ taskInput.addEventListener("keypress", function (e) {
   }
 });
 
-renderTasks();
+loadTasks(); // Initial load
