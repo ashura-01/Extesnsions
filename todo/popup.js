@@ -4,14 +4,14 @@ const taskList = document.getElementById("taskList");
 let tasks = [];
 
 function loadTasks() {
-  chrome.storage.sync.get(["tasks"], (result) => {
+  chrome.storage.local.get(["tasks"], (result) => {
     tasks = result.tasks || [];
     renderTasks();
   });
 }
 
 function saveTasks() {
-  chrome.storage.sync.set({ tasks });
+  chrome.storage.local.set({ tasks });
 }
 
 function renderTasks() {
