@@ -1,0 +1,17 @@
+{
+  "name": "Task Manager Sidebar",
+  "description": "Task manager in a sidebar injected into pages",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["scripting", "activeTab"],
+  "action": {
+    "default_title": "Toggle Task Manager Sidebar"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [{
+    "resources": ["panel.html", "style.css", "popup.js"],
+    "matches": ["<all_urls>"]
+  }]
+}
