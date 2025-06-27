@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
 
 body {
-  background: linear-gradient(135deg, #121212 0%, #27275a 100%);
-  color: #00e5ff;
+  background: linear-gradient(135deg, #0e0f1a 0%, #0c0c26 100%);
+  color: #00aaff;
   font-family: 'Segoe UI', sans-serif;
   padding: 10px;
   width: 300px;
@@ -14,7 +14,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
   box-sizing: border-box;
-  height: auto; /* allow body to fit content */
+  height: auto;
 }
 
 h1 {
@@ -41,15 +41,15 @@ input[type="text"] {
   border: none;
   border-radius: 8px;
   background: #1e1e1e;
-  color: #00f7ff;
-  box-shadow: 0 0 6px #00e5ff50;
+  color: #00aaff;
+  box-shadow: 0 0 8px #00aaff99;
   transition: box-shadow 0.3s ease;
   box-sizing: border-box;
 }
 
 input[type="text"]:focus {
   outline: none;
-  box-shadow: 0 0 10px #00e5ffcc;
+  box-shadow: 0 0 12px #009dffff;
 }
 
 ul {
@@ -62,7 +62,7 @@ ul {
 
 li {
   width: 100%;
-  background: linear-gradient(135deg, #1a1a1a, #0c082a);
+  background: linear-gradient(135deg, #151515, #090921);
   margin-top: 10px;
   padding: 10px;
   border-radius: 10px;
@@ -70,14 +70,14 @@ li {
   align-items: center;
   font-size: 16px;
   color: #ffffff;
-  box-shadow: 0 0 10px #00e5ff22;
+  box-shadow: 0 0 12px #007fff33;
   transition: all 0.25s ease-in-out;
   box-sizing: border-box;
 }
 
 li:hover {
   transform: scale(1.01);
-  box-shadow: 0 0 14px #00e5ff55;
+  box-shadow: 0 0 16px #0080ff88;
 }
 
 li.completed {
@@ -104,11 +104,11 @@ li input[type="text"] {
   flex: 1 1 auto;
   padding: 6px 8px;
   font-size: 16px;
-  border: 1px solid #00bcd4;
+  border: 1px solid #007bff;
   border-radius: 5px;
   background: #1e1e1e;
-  color: #00f7ff;
-  box-shadow: 0 0 5px #00f7ff55;
+  color: #00aaff;
+  box-shadow: 0 0 6px #007fff88;
   box-sizing: border-box;
   word-break: break-word;
   white-space: pre-wrap;
@@ -116,13 +116,13 @@ li input[type="text"] {
 
 li input[type="text"]:focus {
   outline: none;
-  box-shadow: 0 0 10px #00f7ffaa;
+  box-shadow: 0 0 10px #009dffcc;
 }
 
 li button {
   background: transparent;
   border: none;
-  color: #f44336;
+  color: #007fff;
   font-size: 18px;
   cursor: pointer;
   flex-shrink: 0;
@@ -132,7 +132,7 @@ li button {
 
 li button:hover {
   transform: scale(1.2);
-  color: #ff6b6b;
+  color: #33bfff;
 }
 
 /* Checkbox styles */
@@ -141,18 +141,18 @@ input[type="checkbox"] {
   position: relative;
   width: 17px;
   height: 17px;
-  border: 2px solid #00bcd4;
+  border: 2px solid #007bff;
   background-color: #121212;
   border-radius: 5px;
   transition: all 0.3s ease;
   cursor: pointer;
-  box-shadow: 0 0 5px #00bcd455;
+  box-shadow: 0 0 6px #007fff55;
 }
 
 input[type="checkbox"]:checked {
   background-color: #121212;
-  border-color: #00bcd4;
-  box-shadow: 0 0 8px #00bcd4cc;
+  border-color: #007bff;
+  box-shadow: 0 0 10px #007bffcc;
 }
 
 input[type="checkbox"]:checked::after {
@@ -161,6 +161,6 @@ input[type="checkbox"]:checked::after {
   top: -2px;
   left: 3px;
   font-size: 14px;
-  color: #00bcd4;
+  color: #007bff;
   user-select: none;
 }
