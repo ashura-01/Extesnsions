@@ -1,117 +1,92 @@
-const sound = new Audio('ding.mp3');
-
-let timer;
-let totalSeconds = 0; // start at 0:00
-let running = false;
-
 const timerDisplay = document.getElementById('timer');
 const startBtn = document.getElementById('start');
 const pauseBtn = document.getElementById('pause');
 const resetBtn = document.getElementById('reset');
 const timeInput = document.getElementById('timeInput');
 
-function updateDisplay() {
-  const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
-  const seconds = String(totalSeconds % 60).padStart(2, '0');
-  timerDisplay.textContent = `${minutes}:${seconds}`;
+let localSeconds = 0;
+let localTimer = null;
+
+function updateDisplay(seconds) {
+  const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const s = String(seconds % 60).padStart(2, '0');
+  timerDisplay.textContent = `${m}:${s}`;
 }
 
-function startTimer() {
-  if (running) return;
-  if (totalSeconds <= 0) return; // Don't start if no time set
-  running = true;
-  timer = setInterval(() => {
-    if (totalSeconds <= 0) {
-      clearInterval(timer);
-      running = false;
-      notifyUser();
+function startLocalCountdown(initialSeconds) {
+  clearInterval(localTimer);
+  localSeconds = initialSeconds;
+  updateDisplay(localSeconds);
+
+  localTimer = setInterval(() => {
+    if (localSeconds <= 0) {
+      clearInterval(localTimer);
       return;
     }
-    totalSeconds--;
-    updateDisplay();
+    localSeconds--;
+    updateDisplay(localSeconds);
   }, 1000);
 }
 
-function pauseTimer() {
-  clearInterval(timer);
-  running = false;
-}
-
-function resetTimer() {
-  pauseTimer();
-  totalSeconds = 0;
-  updateDisplay();
-}
-
-function notifyUser() {
-  chrome.notifications.create({
-    type: 'basic',
-    iconUrl: 'icon.png',
-    title: 'FocusForge',
-    message: '⏰ Time is up!',
-    priority: 2
-  });
-  sound.play();
-}
-
 function parseTimeInput(input) {
-  input = input.trim();
-  if (!input) return null;
+  const parts = input.trim().split(':');
+  let m = 0, s = 0;
 
-  const parts = input.split(':');
-
-  let minutes = 0, seconds = 0;
-
-  if (parts.length === 1) {
-    // Only minutes entered
-    if (!/^\d+$/.test(parts[0])) return null;
-    minutes = parseInt(parts[0], 10);
-  } else if (parts.length === 2) {
-    if (!/^\d+$/.test(parts[0]) || !/^\d+$/.test(parts[1])) return null;
-    minutes = parseInt(parts[0], 10);
-    seconds = parseInt(parts[1], 10);
-    if (seconds >= 60) return null; // seconds should be 0-59
+  if (parts.length === 1 && /^\d+$/.test(parts[0])) {
+    m = parseInt(parts[0], 10);
+  } else if (
+    parts.length === 2 &&
+    /^\d+$/.test(parts[0]) &&
+    /^\d+$/.test(parts[1]) &&
+    parseInt(parts[1], 10) < 60
+  ) {
+    m = parseInt(parts[0], 10);
+    s = parseInt(parts[1], 10);
   } else {
-    return null; // invalid format
+    return null;
   }
 
-  if (minutes < 0 || minutes > 100) return null;
-  if (seconds < 0 || seconds > 59) return null;
-
-  return minutes * 60 + seconds;
+  if (m < 0 || m > 100) return null;
+  return m * 60 + s;
 }
 
-function setTimeFromInput() {
-  const val = timeInput.value;
-  const total = parseTimeInput(val);
-  if (total === null) {
-    alert('Please enter time as mm or mm:ss, max 100 minutes, seconds less than 60.');
-    return false;
-  }
-  totalSeconds = total;
-  updateDisplay();
-  pauseTimer();
-  startTimer();
-  return true;
-}
-
-timeInput.addEventListener('keydown', (e) => {
-  // Allow digits, colon, backspace, arrow keys, tab, enter
-  if (!/[0-9:]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Enter' &&
-      e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
-    e.preventDefault();
-  }
-
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    if (setTimeFromInput()) {
-      timeInput.value = '';
-    }
+// Load saved timer state
+chrome.runtime.sendMessage({ command: 'get' }, (res) => {
+  if (res) {
+    updateDisplay(res.seconds);
+    if (res.running) startLocalCountdown(res.seconds);
   }
 });
 
-startBtn.onclick = startTimer;
-pauseBtn.onclick = pauseTimer;
-resetBtn.onclick = resetTimer;
+startBtn.onclick = () => {
+  const val = timeInput.value;
+  const seconds = parseTimeInput(val);
+  if (seconds === null) {
+    alert("Enter time in mm or mm:ss (0–100 mins)");
+    return;
+  }
+  chrome.runtime.sendMessage({ command: 'start', seconds });
+  startLocalCountdown(seconds);
+  timeInput.value = '';
+};
 
-updateDisplay();
+pauseBtn.onclick = () => {
+  chrome.runtime.sendMessage({ command: 'pause' });
+  clearInterval(localTimer);
+};
+
+resetBtn.onclick = () => {
+  chrome.runtime.sendMessage({ command: 'reset' });
+  clearInterval(localTimer);
+  updateDisplay(0);
+};
+
+timeInput.addEventListener('keydown', (e) => {
+  if (!/[0-9:]/.test(e.key) && !['Backspace', 'Enter', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+    e.preventDefault();
+  }
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    startBtn.click();
+  }
+});
