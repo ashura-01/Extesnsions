@@ -47,7 +47,7 @@ engineButtons.forEach(button => {
       case 'G': currentEngine = 'google'; break;
       case 'B': currentEngine = 'bing'; break;
       case 'D': currentEngine = 'duckduckgo'; break;
-      case 'Y': currentEngine = 'yahoo'; break;
+      case 'Y': currentEngine = 'youtube'; break;
       default: currentEngine = 'google';
     }
   });
@@ -70,8 +70,8 @@ searchForm.addEventListener('submit', (e) => {
     case 'duckduckgo':
       url = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
       break;
-    case 'yahoo':
-      url = `https://search.yahoo.com/search?p=${encodeURIComponent(query)}`;
+    case 'youtube':
+      url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
       break;
   }
 
