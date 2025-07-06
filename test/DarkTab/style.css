@@ -362,3 +362,17 @@ footer {
   opacity: 0.6;
 }
 
+#todo-list {
+  /* existing styles */
+  max-height: 200px;
+  overflow-y: auto;
+
+  /* Hide scrollbar - Webkit browsers (Chrome, Safari, Edge) */
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+#todo-list::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}
+
