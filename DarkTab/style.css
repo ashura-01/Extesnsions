@@ -40,11 +40,11 @@ body::before {
 }
 
 .greeting {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 300;
   animation: fadeInDown 1s ease-in-out;
   user-select: none;
-  margin-left: -80px; /* ← move it left slightly */
+  margin-left: -60px; /* ← move it left slightly */
   color: #9bb6ff;
 }
 
