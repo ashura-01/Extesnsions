@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Night Tab Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="overlay">
+    <h1 class="greeting" id="greeting">Hello</h1>
+
+    <main class="main-layout" role="main">
+      <!-- Left side: Clock + Search -->
+      <section class="left">
+        <article class="card clock-card">
+          <time id="clock">00:00</time>
+          <div id="date">Loading...</div>
+        </article>
+
+        <article class="card search-card">
+          <form id="search-form">
+            <div class="search-bar">
+              <input type="search" placeholder="Search the web..." required />
+              <button type="submit">Search</button>
+            </div>
+            <div class="engine-icons">
+              <button type="button">G</button>
+              <button type="button">B</button>
+              <button type="button">D</button>
+              <button type="button">Y</button>
+            </div>
+          </form>
+        </article>
+      </section>
+
+      <!-- Right side: Bookmark Adder + Bookmarks -->
+
+
+      <!-- Bookmarks Grid -->
+      <section class="bookmarks-grid" aria-label="Bookmarks">
+        <div class="bookmark-card small" title="Google Drive" style="--border:#4285F4;"
+          data-link="https://drive.google.com">
+          <img src="drive.png" alt="Google Drive" />
+        </div>
+        <div class="bookmark-card big" title="Gmail" style="--border:#D93025;" data-link="https://mail.google.com">
+          <img src="gmail.png" alt="Gmail" />
+        </div>
+        <div class="bookmark-card small" title="Hackerrank" style="--border:#2EC866;"
+          data-link="https://www.hackerrank.com">
+          <img src="hack.png" alt="Hackerrank" />
+        </div>
+        <div class="bookmark-card small" title="Facebook" style="--border:#1877F2;"
+          data-link="https://www.facebook.com">
+          <img src="fb.png" alt="Facebook" />
+        </div>
+        <div class="bookmark-card small" title="Google Scholar" style="--border:#1A73E8;"
+          data-link="https://classroom.google.com">
+          <img src="academic.png" alt="Google Scholar" />
+        </div>
+        <div class="bookmark-card small" title="WhatsApp" style="--border:#25D366;"
+          data-link="https://web.whatsapp.com">
+          <img src="whtasapp.png" alt="WhatsApp" />
+        </div>
+        <div class="bookmark-card small" title="GitHub" style="--border:#ff9900;" data-link="https://github.com">
+          <img src="git.png" alt="GitHub" />
+        </div>
+        <div class="bookmark-card small" title="Discord" style="--border:#5865F2;" data-link="https://discord.com">
+          <img src="discord.png" alt="Discord" />
+        </div>
+        <div class="bookmark-card small" title="ChatGPT" style="--border:#00eeff;" data-link="https://chat.openai.com">
+          <img src="gpt.png" alt="ChatGPT" />
+        </div>
+        <div class="bookmark-card small" title="Visual Studio Code" style="--border:#ffcd07;"
+          data-link="https://code.visualstudio.com">
+          <img src="code.png" alt="VS Code" />
+        </div>
+        <div class="bookmark-card big" title="Dev.to" style="--border:#a200ff;" data-link="https://dev.to">
+          <img src="dev.png" alt="Dev.to" />
+        </div>
+        <div class="bookmark-card small" title="YouTube" style="--border:#FF0000;" data-link="https://www.youtube.com">
+          <img src="yt.png" alt="YouTube" />
+        </div>
+      </section>
+
+
+
+      </section>
+    </main>
+
+    <footer>yoo boy want some fun?...</footer>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+
+</html>
