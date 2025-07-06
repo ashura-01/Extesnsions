@@ -183,8 +183,8 @@ color: #9bb6ff;
 
 .bookmark-card {
   background: #000;
-  border-radius: 7px;
-  border: 2px solid var(--border, #9333ea);
+  border-radius: 5px;
+  border: 1.5px solid var(--border, #9333ea);
   display: flex;
   align-items: center;
   justify-content: center;
