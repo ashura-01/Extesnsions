@@ -4,13 +4,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Night Tab Clone</title>
+  <title>New Tab</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
   <div class="overlay">
     <h1 class="greeting" id="greeting">Hello</h1>
+
+    <!-- Todo Toggle Icon -->
+<div id="todo-toggle">
+  <img src="todo.png" alt="Todo" />
+</div>
+
+    <!-- Collapsible Todo Panel -->
+    <div id="todo-panel">
+      <h3>Tasks</h3>
+      <form id="todo-form">
+        <input id="todo-input" type="text" placeholder="Add a task..." autocomplete="off" />
+        <button type="submit">Add</button>
+      </form>
+
+      <ul id="todo-list"></ul>
+    </div>
+
 
     <main class="main-layout" role="main">
       <!-- Left side: Clock + Search -->
@@ -48,9 +65,9 @@
         <div class="bookmark-card big" title="Gmail" style="--border:#D93025;" data-link="https://mail.google.com">
           <img src="gmail.png" alt="Gmail" />
         </div>
-        <div class="bookmark-card small" title="Hackerrank" style="--border:#2EC866;"
+        <div class="bookmark-card small" title="Code Force" style="--border:#2EC866;"
           data-link="https://codeforces.com/problemset?tags=800-900">
-          <img src="hack.png" alt="Hackerrank" />
+          <img src="hack.png" alt="Code Force" />
         </div>
         <div class="bookmark-card small" title="Facebook" style="--border:#1877F2;"
           data-link="https://www.facebook.com">
@@ -64,7 +81,7 @@
           data-link="https://web.whatsapp.com">
           <img src="whtasapp.png" alt="WhatsApp" />
         </div>
-        <div class="bookmark-card small" title="GitHub" style="--border:#ff9900;" data-link="https://github.com">
+        <div class="bookmark-card small" title="GitHub" style="--border:#ffffff;" data-link="https://github.com">
           <img src="git.png" alt="GitHub" />
         </div>
         <div class="bookmark-card small" title="Discord" style="--border:#5865F2;" data-link="https://discord.com">
@@ -73,9 +90,9 @@
         <div class="bookmark-card small" title="ChatGPT" style="--border:#00eeff;" data-link="https://chat.openai.com">
           <img src="gpt.png" alt="ChatGPT" />
         </div>
-        <div class="bookmark-card small" title="Visual Studio Code" style="--border:#ffcd07;"
-          data-link="https://code.visualstudio.com">
-          <img src="code.png" alt="VS Code" />
+        <div class="bookmark-card small" title="Leet Code" style="--border:#ffcd07;"
+          data-link="https://leetcode.com/problemset/">
+          <img src="code.png" alt="Leet Code" />
         </div>
         <div class="bookmark-card big" title="Dev.to" style="--border:#a200ff;" data-link="https://dev.to">
           <img src="dev.png" alt="Dev.to" />

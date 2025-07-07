@@ -44,7 +44,7 @@ body::before {
   font-weight: 300;
   animation: fadeInDown 1s ease-in-out;
   user-select: none;
-  margin-left: -60px; /* ← move it left slightly */
+  margin-left: -40px; /* ← move it left slightly */
   color: #9bb6ff;
 }
 
@@ -176,15 +176,15 @@ color: #9bb6ff;
   gap: 12px;
   max-width: 720px;
   padding: 20px 0;
-  margin-top: 140px;
+  margin-top: 157px;
   position: relative;
   z-index: 20;
 }
 
 .bookmark-card {
   background: #000;
-  border-radius: 7px;
-  border: 2px solid var(--border, #9333ea);
+  border-radius: 5px;
+  border: 1.5px solid var(--border, #9333ea);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -253,4 +253,132 @@ footer {
   } to {
     transform: scale(1.02);
   }
+}
+#todo-toggle {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  z-index: 50;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+#todo-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#todo-toggle img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+
+
+/* Todo Panel */
+#todo-panel {
+  position: absolute;
+  top: 70px;
+  left: 30px;
+  width: 280px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 2px solid #9bb6ff;
+  border-radius: 10px;
+  padding: 16px;
+  color: white;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeInUp 0.3s ease;
+  z-index: 40;
+}
+
+#todo-panel h3 {
+  margin-bottom: 8px;
+  color: #9bb6ff;
+  font-size: 1.1rem;
+}
+
+#todo-form {
+  display: flex;
+  gap: 6px;
+}
+
+#todo-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: white;
+}
+
+#todo-form button {
+  background: #9bb6ff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#todo-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#todo-list li {
+  position: relative;
+  padding: 6px 28px 6px 10px;
+  word-break: break-word;
+}
+
+#todo-list li button {
+  position: absolute;
+  top: 10px;
+  right: 6px;
+  color: white;
+  background-color: black;
+
+    font-size: 1.2rem;
+  /* color: #f55; */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+#todo-list li.checked span.task-text {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+#todo-list {
+  /* existing styles */
+  max-height: 200px;
+  overflow-y: auto;
+
+  /* Hide scrollbar - Webkit browsers (Chrome, Safari, Edge) */
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+#todo-list::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}
+
+.engine-icons button.active {
+  background-color: #9bb6ff;
+  color: #000;
+  /* box-shadow: 0 0 8px #9bb6ff; */
+  transform: scale(1.15);
 }
