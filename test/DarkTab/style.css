@@ -376,6 +376,8 @@ footer {
   display: none;  /* Chrome, Safari, Opera */
 }
 
+
+/* this is the hover effect */
 .engine-icons button.active {
   background-color: #9bb6ff;
   color: #000;
