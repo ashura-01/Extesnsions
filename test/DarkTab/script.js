@@ -6,21 +6,75 @@ const searchForm = document.getElementById('search-form');
 const searchInput = searchForm.querySelector('input[type="search"]');
 const engineButtons = searchForm.querySelectorAll('.engine-icons button');
 
+const appsToggle = document.getElementById('google-apps-btn');
+const appsPanel = document.getElementById('google-apps-popup');
+
+// Make appsPanel focusable for accessibility
+appsPanel.setAttribute('tabindex', '-1');
+
+// Initialize popup as hidden and ARIA attributes
+appsPanel.style.display = 'none';
+appsToggle.setAttribute('aria-expanded', 'false');
+appsPanel.setAttribute('aria-hidden', 'true');
+
+// Track popup open state
+let isAppsPanelOpen = false;
+
+// Toggle popup on button click
+appsToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+
+  if (isAppsPanelOpen) {
+    appsPanel.style.display = 'none';
+    appsToggle.setAttribute('aria-expanded', 'false');
+    appsPanel.setAttribute('aria-hidden', 'true');
+    isAppsPanelOpen = false;
+  } else {
+    appsPanel.style.display = 'grid';
+    appsToggle.setAttribute('aria-expanded', 'true');
+    appsPanel.setAttribute('aria-hidden', 'false');
+    appsPanel.focus();
+    isAppsPanelOpen = true;
+  }
+});
+
+// Close popup when clicking outside
+document.addEventListener('click', (e) => {
+  if (!appsToggle.contains(e.target) && !appsPanel.contains(e.target)) {
+    if (isAppsPanelOpen) {
+      appsPanel.style.display = 'none';
+      appsToggle.setAttribute('aria-expanded', 'false');
+      appsPanel.setAttribute('aria-hidden', 'true');
+      isAppsPanelOpen = false;
+    }
+  }
+});
+
+// Close popup on Escape key press
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && isAppsPanelOpen) {
+    appsPanel.style.display = 'none';
+    appsToggle.setAttribute('aria-expanded', 'false');
+    appsPanel.setAttribute('aria-hidden', 'true');
+    appsToggle.focus();
+    isAppsPanelOpen = false;
+  }
+});
+
 let currentEngine = 'google';
 
-// Format date nicely
 function formatDate(date) {
   const options = { weekday: 'long', month: 'long', day: 'numeric' };
   return date.toLocaleDateString(undefined, options);
 }
 
-// Update clock and date every second
 function updateTime() {
   const now = new Date();
 
-  const hours = now.getHours().toString().padStart(2, '0');
-  const mins = now.getMinutes().toString().padStart(2, '0');
-  clockEl.textContent = `${hours}:${mins}`;
+  const hours = now.getHours();
+  const mins = now.getMinutes();
+
+  clockEl.textContent = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
   dateEl.textContent = formatDate(now);
 
   if (hours < 12) {
@@ -43,7 +97,8 @@ engineButtons.forEach(button => {
     engineButtons.forEach(btn => btn.classList.remove('active'));
     button.classList.add('active');
 
-    switch (button.textContent.toUpperCase()) {
+    const engineKey = button.textContent.trim().toUpperCase();
+    switch (engineKey) {
       case 'G': currentEngine = 'google'; break;
       case 'B': currentEngine = 'bing'; break;
       case 'D': currentEngine = 'duckduckgo'; break;
@@ -92,11 +147,15 @@ document.querySelectorAll('.bookmark-card').forEach(card => {
 // ✅ Todo Panel Logic
 // =========================
 
-// Toggle panel
 const toggleBtn = document.getElementById("todo-toggle");
 const panel = document.getElementById("todo-panel");
+
 toggleBtn.addEventListener("click", () => {
-  panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+  if (panel.style.display === "flex") {
+    panel.style.display = "none";
+  } else {
+    panel.style.display = "flex";
+  }
 });
 
 // Todo state + elements
@@ -104,7 +163,7 @@ const todoForm = document.getElementById("todo-form");
 const todoInput = document.getElementById("todo-input");
 const todoList = document.getElementById("todo-list");
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
-let todoChecked = JSON.parse(localStorage.getItem("todoChecked")) || []; // store checked state
+let todoChecked = JSON.parse(localStorage.getItem("todoChecked")) || [];
 
 // Render function
 function renderTodos() {
@@ -112,21 +171,20 @@ function renderTodos() {
   todos.forEach((todo, index) => {
     const li = document.createElement("li");
 
-    // Task text wrapped in span
     const taskSpan = document.createElement("span");
     taskSpan.textContent = todo;
     taskSpan.classList.add("task-text");
+
     if (todoChecked[index]) {
       li.classList.add("checked");
     }
     li.appendChild(taskSpan);
 
-    // Delete button
     const btn = document.createElement("button");
     btn.innerHTML = "×";
     btn.title = "Delete task";
     btn.onclick = (e) => {
-      e.stopPropagation(); // prevent toggling checked
+      e.stopPropagation();
       todos.splice(index, 1);
       todoChecked.splice(index, 1);
       localStorage.setItem("todos", JSON.stringify(todos));
@@ -135,7 +193,6 @@ function renderTodos() {
     };
     li.appendChild(btn);
 
-    // Toggle checked state on click of li (except delete)
     li.addEventListener("click", () => {
       li.classList.toggle("checked");
       todoChecked[index] = !todoChecked[index];
@@ -146,7 +203,6 @@ function renderTodos() {
   });
 }
 
-// Submit handler
 todoForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const value = todoInput.value.trim();
@@ -160,5 +216,4 @@ todoForm.addEventListener("submit", (e) => {
   }
 });
 
-// Initial load
 renderTodos();
