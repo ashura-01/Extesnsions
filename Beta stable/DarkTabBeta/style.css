@@ -151,11 +151,9 @@ color: #9bb6ff;
 }
 
 .engine-icons button {
-  width: 30px;
-  height: 30px;
-  padding: 0;
   background: #1e1e1e;
   border: none;
+  padding: 8px 10px;
   border-radius: 50%;
   color: white;
   cursor: pointer;
@@ -163,11 +161,7 @@ color: #9bb6ff;
   font-size: 1rem;
   transition: transform 0.2s ease;
   user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-
 
 .engine-icons button:hover,
 .engine-icons button:focus {

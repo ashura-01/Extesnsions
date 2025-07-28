@@ -103,10 +103,8 @@ engineButtons.forEach(button => {
       case 'B': currentEngine = 'bing'; break;
       case 'D': currentEngine = 'duckduckgo'; break;
       case 'Y': currentEngine = 'youtube'; break;
-      case 'I': currentEngine = 'google-images'; break;
       default: currentEngine = 'google';
     }
-
   });
 });
 
@@ -117,7 +115,6 @@ searchForm.addEventListener('submit', (e) => {
   if (!query) return;
 
   let url = '';
-
   switch (currentEngine) {
     case 'google':
       url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
@@ -131,11 +128,7 @@ searchForm.addEventListener('submit', (e) => {
     case 'youtube':
       url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
       break;
-    case 'google-images':
-      url = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
-      break;
   }
-
 
   window.open(url, '_blank');
   searchInput.value = '';
