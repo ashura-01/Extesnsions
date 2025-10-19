@@ -19,9 +19,9 @@ body::before {
   content: "";
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: url('https://r4.wallpaperflare.com/wallpaper/496/724/51/photography-snow-path-landscape-wallpaper-50180570e3c2e1a4731dfbcbd4ba1c9e.jpg')
+  background: url('bg.png')
   center center / cover no-repeat;
-  filter: blur(3px) brightness(0.6);
+  filter: blur(1px) brightness(0.6);
   z-index: -1;
 }
 
