@@ -19,9 +19,9 @@ body::before {
   content: "";
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: url('https://r4.wallpaperflare.com/wallpaper/496/724/51/photography-snow-path-landscape-wallpaper-50180570e3c2e1a4731dfbcbd4ba1c9e.jpg')
+  background: url('bg.png')
   center center / cover no-repeat;
-  filter: blur(3px) brightness(0.6);
+  filter: blur(1px) brightness(0.6);
   z-index: -1;
 }
 
@@ -151,9 +151,11 @@ color: #9bb6ff;
 }
 
 .engine-icons button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
   background: #1e1e1e;
   border: none;
-  padding: 8px 10px;
   border-radius: 50%;
   color: white;
   cursor: pointer;
@@ -161,7 +163,11 @@ color: #9bb6ff;
   font-size: 1rem;
   transition: transform 0.2s ease;
   user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 
 .engine-icons button:hover,
 .engine-icons button:focus {
@@ -455,4 +461,200 @@ footer {
 #google-apps-popup a.app-icon img:hover {
   transform: scale(1.3);
   box-shadow: 0 0 8px #9bb6ff88;
+}
+
+
+/* =============================== */
+/* RESPONSIVE STYLES */
+/* =============================== */
+
+/* ---------- Tablet (≤1024px) ---------- */
+@media (max-width: 1024px) {
+  .main-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 120px;
+    margin-left: 0;
+    margin-top: 80px;
+  }
+
+  .left {
+    width: 80%;
+    align-items: center;
+    margin-top: 40px;
+  }
+
+  .clock-card #clock {
+    font-size: 4.5rem;
+  }
+
+  .bookmarks-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 500px;
+    margin-top: 80px;
+  }
+
+  .bookmark-card img {
+    width: 40px;
+    height: 40px;
+  }
+
+  #todo-panel {
+    width: 240px;
+  }
+
+  #google-apps-wrapper {
+    top: 20px;
+    right: 20px;
+  }
+}
+
+/* ---------- Mobile (≤768px) ---------- */
+@media (max-width: 768px) {
+  .overlay {
+    padding: 20px;
+    justify-content: flex-start;
+  }
+
+  .greeting {
+    font-size: 1.2rem;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .main-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    margin: 40px 0;
+  }
+
+  .left {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .clock-card {
+    width: 90%;
+    padding: 16px;
+  }
+
+  .clock-card #clock {
+    font-size: 3.5rem;
+  }
+
+  #date {
+    font-size: 0.9rem;
+  }
+
+  .search-card {
+    width: 90%;
+    padding: 14px;
+  }
+
+  .engine-icons button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  .bookmarks-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 10px 0;
+    margin-top: 50px;
+  }
+
+  .bookmark-card img {
+    width: 34px;
+    height: 34px;
+  }
+
+  footer {
+    font-size: 0.85rem;
+  }
+
+  #todo-panel {
+    width: 200px;
+    top: 60px;
+    left: 20px;
+  }
+
+  #todo-toggle {
+    top: 20px;
+    left: 20px;
+    padding: 6px;
+  }
+
+  #google-apps-wrapper {
+    top: 20px;
+    right: 20px;
+  }
+
+  #google-apps-popup {
+    grid-template-columns: repeat(3, 32px);
+    gap: 8px;
+  }
+}
+
+/* ---------- Small Mobile (≤480px) ---------- */
+@media (max-width: 480px) {
+  .clock-card #clock {
+    font-size: 2.8rem;
+  }
+
+  .bookmarks-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .bookmark-card img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .search-card input {
+    font-size: 0.9rem;
+  }
+
+  .search-card button {
+    font-size: 0.85rem;
+    padding: 8px 10px;
+  }
+
+  .greeting {
+    font-size: 1rem;
+  }
+
+  #todo-panel {
+    width: 180px;
+  }
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url('bg.png') center center / cover no-repeat;
+  filter: blur(1px) brightness(0.6);
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+}
+
+.overlay {
+  position: relative;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;     /* ensures full coverage */
+  padding: 30px;
+  justify-content: space-between;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
