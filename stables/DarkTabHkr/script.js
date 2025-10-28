@@ -78,11 +78,11 @@ function updateTime() {
   dateEl.textContent = formatDate(now);
 
   if (hours < 12) {
-    greetingEl.textContent = 'Good Morning Fahim...';
+    greetingEl.textContent = 'Good Morning Hash...';
   } else if (hours < 18) {
-    greetingEl.textContent = 'Good Afternoon Fahim...';
+    greetingEl.textContent = 'Good Afternoon Hash...';
   } else {
-    greetingEl.textContent = 'Good Evening Fahim...';
+    greetingEl.textContent = 'Good Evening Hash...';
   }
 }
 updateTime();
