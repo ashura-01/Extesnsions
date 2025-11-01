@@ -462,3 +462,14 @@ footer {
   transform: scale(1.3);
   box-shadow: 0 0 8px #9bb6ff88;
 }
+.bookmarks-grid .bookmark-card[data-link*="tryhackme"] {
+  grid-row: span 2;      /* spans 2 rows vertically */
+  grid-column: span 2;   /* optional: make it wider horizontally */
+  aspect-ratio: auto;    /* remove any forced square ratio */
+  padding: 10px;
+}
+
+.bookmarks-grid .bookmark-card[data-link*="tryhackme"] img {
+  width: 80px;  /* increase image size */
+  height: 80px;
+}
