@@ -1,5 +1,5 @@
 {
-  "manifest_version": 4,
+  "manifest_version": 3,
   "name": "Hacker dashboard",
   "version": "1.0",
   "description": "A beautiful custom new tab page.",

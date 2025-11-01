@@ -52,7 +52,7 @@ body::before {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 380px; /* reduced gap */
+  gap: 370px; /* reduced gap */
   width: 100%;
   max-width: 1200px;
   padding: 0 20px;
@@ -464,12 +464,24 @@ footer {
 }
 .bookmarks-grid .bookmark-card[data-link*="tryhackme"] {
   grid-row: span 2;      /* spans 2 rows vertically */
-  grid-column: span 2;   /* optional: make it wider horizontally */
+  grid-column: span 1;   /* optional: make it wider horizontally */
   aspect-ratio: auto;    /* remove any forced square ratio */
   padding: 10px;
 }
 
 .bookmarks-grid .bookmark-card[data-link*="tryhackme"] img {
-  width: 80px;  /* increase image size */
-  height: 80px;
+  width: 60px;  /* increase image size */
+  height: 60px;
+}
+
+.bookmarks-grid .bookmark-card[data-link*="urlscan"] {
+  grid-row: span 1;      /* spans 2 rows vertically */
+  grid-column: span 2;   /* optional: make it wider horizontally */
+  aspect-ratio: auto;    /* remove any forced square ratio */
+  padding: 10px;
+}
+
+.bookmarks-grid .bookmark-card[data-link*="urlscan"] img {
+  width: 40px;  /* increase image size */
+  height: 40px;
 }
