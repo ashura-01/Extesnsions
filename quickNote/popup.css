@@ -1,0 +1,68 @@
+:root {
+  --bg: #0a0a0a;
+  --card-bg: #161616;
+  --accent: #b8c7ff; /* bluish white */
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 340px;
+  height: 320px; /* taller popup */
+  background: var(--bg);
+  color: var(--text);
+}
+
+.note-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  padding: 12px;
+  height: 100%;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+h1 {
+  font-size: 15px;
+  margin: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+#status {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+textarea {
+  margin-top: 10px;
+  flex: 1;
+  width: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  font-size: 14px;
+  border-radius: 8px;
+  padding: 10px;
+  line-height: 1.6;
+  transition: background 0.2s ease;
+}
+
+textarea:focus {
+  background: rgba(255,255,255,0.06);
+}

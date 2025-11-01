@@ -470,18 +470,7 @@ footer {
 }
 
 .bookmarks-grid .bookmark-card[data-link*="tryhackme"] img {
-  width: 60px;  /* increase image size */
-  height: 60px;
+  width: 55px;  /* increase image size */
+  height: 55px;
 }
 
-.bookmarks-grid .bookmark-card[data-link*="urlscan"] {
-  grid-row: span 1;      /* spans 2 rows vertically */
-  grid-column: span 2;   /* optional: make it wider horizontally */
-  aspect-ratio: auto;    /* remove any forced square ratio */
-  padding: 10px;
-}
-
-.bookmarks-grid .bookmark-card[data-link*="urlscan"] img {
-  width: 40px;  /* increase image size */
-  height: 40px;
-}
