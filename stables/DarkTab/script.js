@@ -104,9 +104,11 @@ engineButtons.forEach(button => {
       case 'D': currentEngine = 'duckduckgo'; break;
       case 'Y': currentEngine = 'youtube'; break;
       case 'I': currentEngine = 'google-images'; break;
+      case 'YA': currentEngine = 'yandex'; break;
+      case 'YI': currentEngine = 'yandex-images'; break;
+      case 'S': currentEngine = 'shodan'; break;
       default: currentEngine = 'google';
     }
-
   });
 });
 
@@ -114,30 +116,54 @@ engineButtons.forEach(button => {
 searchForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const query = searchInput.value.trim();
-  if (!query) return;
 
   let url = '';
 
   switch (currentEngine) {
     case 'google':
-      url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+      url = query
+        ? `https://www.google.com/search?q=${encodeURIComponent(query)}`
+        : 'https://www.google.com';
       break;
     case 'bing':
-      url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+      url = query
+        ? `https://www.bing.com/search?q=${encodeURIComponent(query)}`
+        : 'https://www.bing.com';
       break;
     case 'duckduckgo':
-      url = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+      url = query
+        ? `https://duckduckgo.com/?q=${encodeURIComponent(query)}`
+        : 'https://duckduckgo.com';
       break;
     case 'youtube':
-      url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+      url = query
+        ? `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`
+        : 'https://www.youtube.com';
       break;
     case 'google-images':
-      url = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
+      url = query
+        ? `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`
+        : 'https://www.google.com/imghp';
+      break;
+    case 'yandex':
+      url = query
+        ? `https://yandex.com/search/?text=${encodeURIComponent(query)}`
+        : 'https://yandex.com';
+      break;
+    case 'yandex-images':
+      url = query
+        ? `https://yandex.com/images/search?text=${encodeURIComponent(query)}`
+        : 'https://yandex.com/images';
+      break;
+    case 'shodan':
+      url = query
+        ? `https://www.shodan.io/search?query=${encodeURIComponent(query)}`
+        : 'https://www.shodan.io';
       break;
   }
 
-
-  window.open(url, '_blank');
+  // ✅ open homepage in same tab when empty
+  window.location.href = url;
   searchInput.value = '';
 });
 
