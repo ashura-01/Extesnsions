@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>New Tab</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- FontAwesome for camera icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 </head>
 
 <body>
@@ -13,53 +15,58 @@
     <h1 class="greeting" id="greeting">Hello</h1>
 
     <!-- Todo Toggle Icon -->
-<div id="todo-toggle">
-  <img src="todo.png" alt="Todo" />
-</div>
-<!-- Google Apps Icon -->
-<div id="google-apps-wrapper">
-  <button id="google-apps-btn" aria-label="Open Google Apps menu">
-    <div class="dot-row">
-      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+    <div id="todo-toggle">
+      <img src="todo.png" alt="Todo" />
     </div>
-    <div class="dot-row">
-      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+
+    <!-- Google Apps Icon -->
+    <div id="google-apps-wrapper">
+      <button id="google-apps-btn" aria-label="Open Google Apps menu">
+        <div class="dot-row">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="dot-row">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="dot-row">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+      </button>
+
+      <div id="google-apps-popup" role="menu" aria-hidden="true">
+
+        <a href="https://docs.google.com/" class="app-icon">
+          <img src="docs.png" alt="Docs" />
+        </a>
+
+
+        <a href="https://sheets.google.com" rel="noopener" class="app-icon">
+          <img src="sheets.png" alt="Sheets" />
+        </a>
+
+        <a href="https://slides.google.com" rel="noopener" class="app-icon">
+          <img src="slides.png" alt="Slides" />
+        </a>
+        <a href="https://calendar.google.com" rel="noopener" class="app-icon">
+          <img src="calender.png" alt="Calendar" />
+        </a>
+        <a href="https://maps.google.com" rel="noopener" class="app-icon">
+          <img src="maps.png" alt="Maps" />
+        </a>
+        <a href="https://meet.google.com/landing?hs=197&authuser=0" rel="noopener" class="app-icon">
+          <img src="meet.png" alt="Meet" />
+        </a>
+        <a href="https://translate.google.com/?sl=bn&tl=en&op=translate" rel="noopener" class="app-icon">
+          <img src="trans.png" alt="Translate" />
+        </a>
+        <a href="https://photos.google.com" rel="noopener" class="app-icon">
+          <img src="photos.png" alt="Photos" />
+        </a>
+        <a href="https://myaccount.google.com" rel="noopener" class="app-icon">
+          <img src="account.png" alt="Account" />
+        </a>
+      </div>
     </div>
-    <div class="dot-row">
-      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-    </div>
-  </button>
-  <div id="google-apps-popup" role="menu" aria-hidden="true">
-    <a href="https://docs.google.com" target="_blank" rel="noopener" class="app-icon">
-      <img src="docs.png" alt="Docs" />
-    </a>
-    <a href="https://sheets.google.com" target="_blank" rel="noopener" class="app-icon" >
-      <img src="sheets.png" alt="Sheets" />
-    </a>
-    <a href="https://slides.google.com" target="_blank" rel="noopener" class="app-icon" >
-      <img src="slides.png" alt="Slides" />
-    </a>
-    <a href="https://calendar.google.com" target="_blank" rel="noopener" class="app-icon" >
-      <img src="calender.png" alt="Calendar" />
-    </a>
-    <a href="https://maps.google.com" target="_blank" rel="noopener" class="app-icon" >
-      <img src="maps.png" alt="Maps" />
-    </a>
-    <a href="https://meet.google.com/landing?hs=197&authuser=0" target="_blank" rel="noopener" class="app-icon" >
-      <img src="meet.png" alt="meet" />
-    </a>
-    <a href="https://translate.google.com/?sl=bn&tl=en&op=translate" target="_blank" rel="noopener" class="app-icon" >
-      <img src="trans.png" alt="translate" />
-    </a>
-    <a href="https://photos.google.com" target="_blank" rel="noopener" class="app-icon" >
-      <img src="photos.png" alt="photos" />
-    </a>
-    <a href="https://myaccount.google.com" target="_blank" rel="noopener" class="app-icon" >
-      <img src="account.png" alt="account" />
-    </a>
-    <!-- Add 5 more apps as needed -->
-  </div>
-</div>
 
     <!-- Collapsible Todo Panel -->
     <div id="todo-panel">
@@ -68,10 +75,8 @@
         <input id="todo-input" type="text" placeholder="Add a task..." autocomplete="off" />
         <button type="submit">Add</button>
       </form>
-
       <ul id="todo-list"></ul>
     </div>
-
 
     <main class="main-layout" role="main">
       <!-- Left side: Clock + Search -->
@@ -84,25 +89,27 @@
         <article class="card search-card">
           <form id="search-form">
             <div class="search-bar">
-              <input type="search" placeholder="Search the web..." required />
+              <input type="search" placeholder="Search the web..." />
               <button type="submit">Search</button>
+              
             </div>
+
+            
             <div class="engine-icons">
               <button type="button">G</button>
               <button type="button">B</button>
               <button type="button">D</button>
               <button type="button">Y</button>
               <button type="button">I</button>
-
+              <button type="button">YA</button>
+              <button type="button">YI</button>
+              <button type="button">S</button>
             </div>
           </form>
         </article>
       </section>
 
-      <!-- Right side: Bookmark Adder + Bookmarks -->
-
-
-      <!-- Bookmarks Grid -->
+      <!-- Right side: Bookmarks -->
       <section class="bookmarks-grid" aria-label="Bookmarks">
         <div class="bookmark-card small" title="Google Drive" style="--border:#4285F4;"
           data-link="https://drive.google.com">
@@ -113,15 +120,15 @@
         </div>
         <div class="bookmark-card small" title="Hack the Box" style="--border:#2EC866;"
           data-link="https://account.hackthebox.com/dashboard">
-          <img src="hack.png" alt="Code Force" />
+          <img src="hack.png" alt="Hack The Box" />
         </div>
         <div class="bookmark-card small" title="Facebook" style="--border:#1877F2;"
           data-link="https://www.facebook.com">
           <img src="fb.png" alt="Facebook" />
         </div>
-        <div class="bookmark-card small" title="GoogleClassroom" style="--border:#e1e81a;"
+        <div class="bookmark-card small" title="Google Classroom" style="--border:#e1e81a;"
           data-link="https://classroom.google.com/u/2/">
-          <img src="academic.png" alt="Google Scholar" />
+          <img src="academic.png" alt="Google Classroom" />
         </div>
         <div class="bookmark-card small" title="WhatsApp" style="--border:#25D366;"
           data-link="https://web.whatsapp.com">
@@ -130,24 +137,27 @@
         <div class="bookmark-card small" title="GitHub" style="--border:#ffffff;" data-link="https://github.com">
           <img src="git.png" alt="GitHub" />
         </div>
-        <div class="bookmark-card small" title="Discord" style="--border:#5865F2;" data-link="https://discord.com/channels/@me">
+
+
+        <div class="bookmark-card small" title="Discord" style="--border:#9099ff;"
+          data-link="https://discord.com/channels/@me">
           <img src="discord.png" alt="Discord" />
         </div>
+        <div class="bookmark-card big" title="TryHackMe" style="--border:#ffb813;"
+          data-link="https://tryhackme.com/welcome">
+          <img src="code.png" alt="TryHackMe" />
+        </div>
+
         <div class="bookmark-card small" title="ChatGPT" style="--border:#00eeff;" data-link="https://chat.openai.com">
           <img src="gpt.png" alt="ChatGPT" />
         </div>
-        <div class="bookmark-card small" title="Try hack me" style="--border:#ffcd07;"
-          data-link="https://tryhackme.com/welcome">
-          <img src="code.png" alt="Leet Code" />
-        </div>
+
         <div class="bookmark-card big" title="Dev.to" style="--border:#a200ff;" data-link="https://dev.to">
           <img src="dev.png" alt="Dev.to" />
         </div>
         <div class="bookmark-card small" title="YouTube" style="--border:#FF0000;" data-link="https://www.youtube.com">
           <img src="yt.png" alt="YouTube" />
         </div>
-      </section>
-
 
 
       </section>

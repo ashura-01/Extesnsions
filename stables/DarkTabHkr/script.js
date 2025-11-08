@@ -1,4 +1,6 @@
-// DOM elements
+// =========================
+// DOM Elements
+// =========================
 const clockEl = document.getElementById('clock');
 const dateEl = document.getElementById('date');
 const greetingEl = document.getElementById('greeting');
@@ -11,19 +13,17 @@ const appsPanel = document.getElementById('google-apps-popup');
 
 // Make appsPanel focusable for accessibility
 appsPanel.setAttribute('tabindex', '-1');
-
-// Initialize popup as hidden and ARIA attributes
 appsPanel.style.display = 'none';
 appsToggle.setAttribute('aria-expanded', 'false');
 appsPanel.setAttribute('aria-hidden', 'true');
 
-// Track popup open state
 let isAppsPanelOpen = false;
 
-// Toggle popup on button click
+// =========================
+// Google Apps popup toggle
+// =========================
 appsToggle.addEventListener('click', (e) => {
   e.stopPropagation();
-
   if (isAppsPanelOpen) {
     appsPanel.style.display = 'none';
     appsToggle.setAttribute('aria-expanded', 'false');
@@ -38,19 +38,15 @@ appsToggle.addEventListener('click', (e) => {
   }
 });
 
-// Close popup when clicking outside
 document.addEventListener('click', (e) => {
   if (!appsToggle.contains(e.target) && !appsPanel.contains(e.target)) {
-    if (isAppsPanelOpen) {
-      appsPanel.style.display = 'none';
-      appsToggle.setAttribute('aria-expanded', 'false');
-      appsPanel.setAttribute('aria-hidden', 'true');
-      isAppsPanelOpen = false;
-    }
+    appsPanel.style.display = 'none';
+    appsToggle.setAttribute('aria-expanded', 'false');
+    appsPanel.setAttribute('aria-hidden', 'true');
+    isAppsPanelOpen = false;
   }
 });
 
-// Close popup on Escape key press
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && isAppsPanelOpen) {
     appsPanel.style.display = 'none';
@@ -61,148 +57,147 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-let currentEngine = 'google';
-
+// =========================
+// Clock + Greeting
+// =========================
 function formatDate(date) {
-  const options = { weekday: 'long', month: 'long', day: 'numeric' };
-  return date.toLocaleDateString(undefined, options);
+  return date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
 }
 
 function updateTime() {
   const now = new Date();
-
   const hours = now.getHours();
   const mins = now.getMinutes();
 
   clockEl.textContent = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
   dateEl.textContent = formatDate(now);
 
-  if (hours < 12) {
-    greetingEl.textContent = 'Good Morning Hash...';
-  } else if (hours < 18) {
-    greetingEl.textContent = 'Good Afternoon Hash...';
-  } else {
-    greetingEl.textContent = 'Good Evening Hash...';
-  }
+  if (hours < 12) greetingEl.textContent = 'Good Morning Hash...';
+  else if (hours < 18) greetingEl.textContent = 'Good Afternoon Hash...';
+  else greetingEl.textContent = 'Good Evening Hash...';
 }
+
 updateTime();
 setInterval(updateTime, 1000);
 
-// Set default search engine active
+// =========================
+// Search Engine Switching
+// =========================
+let currentEngine = 'google';
 engineButtons[0].classList.add('active');
 
-// Engine switch logic
 engineButtons.forEach(button => {
   button.addEventListener('click', () => {
     engineButtons.forEach(btn => btn.classList.remove('active'));
     button.classList.add('active');
 
-    const engineKey = button.textContent.trim().toUpperCase();
-    switch (engineKey) {
+    const key = button.textContent.trim().toUpperCase();
+    switch (key) {
       case 'G': currentEngine = 'google'; break;
       case 'B': currentEngine = 'bing'; break;
       case 'D': currentEngine = 'duckduckgo'; break;
       case 'Y': currentEngine = 'youtube'; break;
       case 'I': currentEngine = 'google-images'; break;
+      case 'YA': currentEngine = 'yandex'; break;
+      case 'YI': currentEngine = 'yandex-images'; break;
+      case 'S': currentEngine = 'shodan'; break;
       default: currentEngine = 'google';
     }
-
   });
 });
 
+// =========================
 // Search form submit
+// =========================
 searchForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const query = searchInput.value.trim();
-  if (!query) return;
 
   let url = '';
 
   switch (currentEngine) {
     case 'google':
-      url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+      url = query ? `https://www.google.com/search?q=${encodeURIComponent(query)}` : 'https://www.google.com';
       break;
     case 'bing':
-      url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+      url = query ? `https://www.bing.com/search?q=${encodeURIComponent(query)}` : 'https://www.bing.com';
       break;
     case 'duckduckgo':
-      url = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+      url = query ? `https://duckduckgo.com/?q=${encodeURIComponent(query)}` : 'https://duckduckgo.com';
       break;
     case 'youtube':
-      url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+      url = query ? `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}` : 'https://www.youtube.com';
       break;
     case 'google-images':
-      url = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
+      url = query ? `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}` : 'https://www.google.com/imghp';
+      break;
+    case 'yandex':
+      url = query ? `https://yandex.com/search/?text=${encodeURIComponent(query)}` : 'https://yandex.com';
+      break;
+    case 'yandex-images':
+      url = query ? `https://yandex.com/images/search?text=${encodeURIComponent(query)}` : 'https://yandex.com/images';
+      break;
+    case 'shodan':
+      url = query ? `https://www.shodan.io/search?query=${encodeURIComponent(query)}` : 'https://www.shodan.io';
       break;
   }
 
-
-  window.open(url, '_blank');
+  window.location.href = url;
   searchInput.value = '';
 });
 
-// Bookmark click handling
+// =========================
+// Bookmark clicks
+// =========================
 document.querySelectorAll('.bookmark-card').forEach(card => {
-  card.style.cursor = 'pointer';
   card.addEventListener('click', () => {
-    const url = card.getAttribute('data-link');
-    if (url) window.location.href = url;
+    const link = card.getAttribute('data-link');
+    if (link) window.location.href = link;
   });
 });
 
 // =========================
-// ✅ Todo Panel Logic
+// Todo Panel Logic
 // =========================
-
 const toggleBtn = document.getElementById("todo-toggle");
 const panel = document.getElementById("todo-panel");
 
 toggleBtn.addEventListener("click", () => {
-  if (panel.style.display === "flex") {
-    panel.style.display = "none";
-  } else {
-    panel.style.display = "flex";
-  }
+  panel.style.display = (panel.style.display === "flex") ? "none" : "flex";
 });
 
-// Todo state + elements
 const todoForm = document.getElementById("todo-form");
 const todoInput = document.getElementById("todo-input");
 const todoList = document.getElementById("todo-list");
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
 let todoChecked = JSON.parse(localStorage.getItem("todoChecked")) || [];
 
-// Render function
 function renderTodos() {
   todoList.innerHTML = "";
-  todos.forEach((todo, index) => {
+  todos.forEach((todo, idx) => {
     const li = document.createElement("li");
-
-    const taskSpan = document.createElement("span");
-    taskSpan.textContent = todo;
-    taskSpan.classList.add("task-text");
-
-    if (todoChecked[index]) {
-      li.classList.add("checked");
-    }
-    li.appendChild(taskSpan);
+    const span = document.createElement("span");
+    span.textContent = todo;
+    span.classList.add("task-text");
+    if (todoChecked[idx]) li.classList.add("checked");
+    li.appendChild(span);
 
     const btn = document.createElement("button");
     btn.innerHTML = "×";
     btn.title = "Delete task";
-    btn.onclick = (e) => {
+    btn.onclick = e => {
       e.stopPropagation();
-      todos.splice(index, 1);
-      todoChecked.splice(index, 1);
+      todos.splice(idx, 1);
+      todoChecked.splice(idx, 1);
       localStorage.setItem("todos", JSON.stringify(todos));
       localStorage.setItem("todoChecked", JSON.stringify(todoChecked));
       renderTodos();
     };
     li.appendChild(btn);
 
-    li.addEventListener("click", () => {
-      li.classList.toggle("checked");
-      todoChecked[index] = !todoChecked[index];
+    li.addEventListener('click', () => {
+      li.classList.toggle('checked');
+      todoChecked[idx] = !todoChecked[idx];
       localStorage.setItem("todoChecked", JSON.stringify(todoChecked));
     });
 
@@ -210,15 +205,15 @@ function renderTodos() {
   });
 }
 
-todoForm.addEventListener("submit", (e) => {
+todoForm.addEventListener("submit", e => {
   e.preventDefault();
-  const value = todoInput.value.trim();
-  if (value !== "") {
-    todos.push(value);
+  const val = todoInput.value.trim();
+  if (val !== "") {
+    todos.push(val);
     todoChecked.push(false);
     localStorage.setItem("todos", JSON.stringify(todos));
     localStorage.setItem("todoChecked", JSON.stringify(todoChecked));
-    todoInput.value = "";
+    todoInput.value = '';
     renderTodos();
   }
 });

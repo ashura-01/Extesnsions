@@ -19,35 +19,32 @@ body::before {
   content: "";
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: url('bg.png') center center / cover no-repeat;
+  background: url('https://r4.wallpaperflare.com/wallpaper/496/724/51/photography-snow-path-landscape-wallpaper-50180570e3c2e1a4731dfbcbd4ba1c9e.jpg')
+  center center / cover no-repeat;
   filter: blur(3px) brightness(0.6);
   z-index: -1;
 }
 
-
-
 .overlay {
-  position: fixed;       /* make overlay fixed to viewport */
-  inset: 0;              /* top:0; right:0; bottom:0; left:0 */
+  position: relative;
+  z-index: 10;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  padding: 30px;
   justify-content: space-between;
   align-items: center;
-  padding: 30px;
-  z-index: 10;
-  overflow: auto;       /* allow scrolling if content overflows */
-  min-height: 100vh;    /* ensure full height */
+  overflow: visible;
 }
 
-
 .greeting {
-  font-size: 1.4rem;
-  font-weight: 100;
+  font-size: 1.5rem;
+  font-weight: 300;
   animation: fadeInDown 1s ease-in-out;
   user-select: none;
-  margin-left: -40px;
+  margin-left: -40px; /* ← move it left slightly */
   color: #9bb6ff;
 }
 
@@ -55,14 +52,14 @@ body::before {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 300px;
+  gap: 380px; /* reduced gap */
   width: 100%;
   max-width: 1200px;
   padding: 0 20px;
   box-sizing: border-box;
   flex-grow: 1;
   overflow: visible;
-  margin-top: 120px;
+  margin-top: 113px;
   margin-bottom: 40px;
   margin-left: 50px;
 }
@@ -70,7 +67,7 @@ body::before {
 /* Left side */
 .left {
   margin-top: 97px;
-  width: 45%;
+  width: 45%; /* reduced width */
   display: flex;
   flex-direction: column;
   max-height: 100%;
@@ -88,16 +85,16 @@ body::before {
 }
 
 .clock-card #clock {
-  font-size: 6rem;
+  font-size: 6rem; /* reduced from 7rem */
   font-weight: 500;
   color: #9bb6ff;
   animation: pulse 1.5s infinite alternate;
 }
 
 #date {
-  margin-top: 6px;
-  font-size: 0.95rem;
-  color: #9bb6ff;
+margin-top: 6px;
+font-size: 0.95rem;
+color: #9bb6ff;
 }
 
 .search-card {
@@ -170,6 +167,7 @@ body::before {
   align-items: center;
   justify-content: center;
 }
+
 
 .engine-icons button:hover,
 .engine-icons button:focus {
@@ -262,7 +260,6 @@ footer {
     transform: scale(1.02);
   }
 }
-
 #todo-toggle {
   position: absolute;
   top: 30px;
@@ -284,6 +281,8 @@ footer {
   height: 24px;
   display: block;
 }
+
+
 
 /* Todo Panel */
 #todo-panel {
@@ -353,7 +352,9 @@ footer {
   right: 6px;
   color: white;
   background-color: black;
-  font-size: 1.2rem;
+
+    font-size: 1.2rem;
+  /* color: #f55; */
   background: transparent;
   border: none;
   cursor: pointer;
@@ -368,22 +369,30 @@ footer {
 }
 
 #todo-list {
+  /* existing styles */
   max-height: 200px;
   overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+
+  /* Hide scrollbar - Webkit browsers (Chrome, Safari, Edge) */
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
 }
 
 #todo-list::-webkit-scrollbar {
-  display: none;
+  display: none;  /* Chrome, Safari, Opera */
 }
 
+
+/* this is the hover effect */
 .engine-icons button.active {
   background-color: #9bb6ff;
   color: #000;
+  /* box-shadow: 0 0 8px #9bb6ff; */
   transform: scale(1.15);
 }
 
+
+ /* new features editing */
 #google-apps-wrapper {
   position: absolute;
   top: 30px;
@@ -400,7 +409,7 @@ footer {
   cursor: pointer;
   display: inline-flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 4px; /* slightly increased for visual balance */
   width: 28px;
   height: 28px;
   justify-content: center;
@@ -415,8 +424,8 @@ footer {
 }
 
 .dot {
-  width: 5px;
-  height: 5px;
+  width: 5px;                /* was 4px */
+  height: 5px;               /* was 4px */
   background-color: #9bb6ff;
   border-radius: 50%;
   display: inline-block;
@@ -452,107 +461,4 @@ footer {
 #google-apps-popup a.app-icon img:hover {
   transform: scale(1.3);
   box-shadow: 0 0 8px #9bb6ff88;
-}
-
-/* ✅ Responsive adjustments */
-
-/* Tablet (≤ 1024px) */
-@media (max-width: 1024px) {
-  .main-layout {
-    flex-direction: column;
-    align-items: center;
-    gap: 60px;
-    margin-left: 0;
-  }
-
-  .left {
-    width: 100%;
-    margin-top: 40px;
-    align-items: center;
-  }
-
-  .bookmarks-grid {
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 500px;
-    margin-top: 80px;
-  }
-
-  .bookmark-card img {
-    width: 40px;
-    height: 40px;
-  }
-
-  #todo-panel {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 350px;
-  }
-}
-
-/* Phone (≤ 600px) */
-@media (max-width: 600px) {
-  .main-layout {
-    flex-direction: column;
-    gap: 30px;
-    margin: 0 auto;
-    padding: 10px;
-  }
-
-  .greeting {
-    margin-left: 0;
-    font-size: 1.2rem;
-    text-align: center;
-  }
-
-  .clock-card #clock {
-    font-size: 3rem;
-  }
-
-  #date {
-    font-size: 0.8rem;
-  }
-
-  .bookmarks-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 40px;
-  }
-
-  .bookmark-card img {
-    width: 32px;
-    height: 32px;
-  }
-
-  .search-card {
-    width: 100%;
-  }
-
-  footer {
-    font-size: 0.8rem;
-  }
-
-  #google-apps-wrapper {
-    top: 15px;
-    right: 15px;
-  }
-
-  #todo-toggle {
-    top: 15px;
-    left: 15px;
-  }
-}
-
-.bookmarks-grid .bookmark-card[data-link*="tryhackme"] {
-  grid-row: span 2;      /* spans 2 rows vertically */
-  grid-column: span 1;   /* optional: make it wider horizontally */
-  aspect-ratio: auto;    /* remove any forced square ratio */
-  padding: 10px;
-}
-
-.bookmarks-grid .bookmark-card[data-link*="tryhackme"] img {
-  width: 55px;  /* increase image size */
-  height: 55px;
 }
