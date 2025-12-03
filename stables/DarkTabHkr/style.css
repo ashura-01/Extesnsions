@@ -545,14 +545,14 @@ footer {
   }
 }
 
-.bookmarks-grid .bookmark-card[data-link*="tryhackme"] {
+.bookmarks-grid .bookmark-card[data-link*="https://tryhackme.com/dashboard"] {
   grid-row: span 2;      /* spans 2 rows vertically */
   grid-column: span 1;   /* optional: make it wider horizontally */
   aspect-ratio: auto;    /* remove any forced square ratio */
   padding: 10px;
 }
 
-.bookmarks-grid .bookmark-card[data-link*="tryhackme"] img {
+.bookmarks-grid .bookmark-card[data-link*="https://tryhackme.com/dashboard"] img {
   width: 55px;  /* increase image size */
   height: 55px;
 }
