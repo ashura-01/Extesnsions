@@ -1,0 +1,560 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  height: 100vh;
+  background: #000;
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('bg.png') center center / cover no-repeat;
+  filter: blur(3px) brightness(0.6);
+  z-index: -1;
+}
+
+
+
+.overlay {
+  position: fixed;       /* make overlay fixed to viewport */
+  inset: 0;              /* top:0; right:0; bottom:0; left:0 */
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px;
+  z-index: 10;
+  overflow: auto;       /* allow scrolling if content overflows */
+  min-height: 100vh;    /* ensure full height */
+}
+
+
+.greeting {
+  font-size: 1.4rem;
+  font-weight: 100;
+  animation: fadeInDown 1s ease-in-out;
+  user-select: none;
+  margin-left: -40px;
+  color: #d86565;
+}
+
+.main-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 300px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  flex-grow: 1;
+  overflow: visible;
+  margin-top: 90px;
+  margin-bottom: 40px;
+  margin-left: 50px;
+}
+
+/* Left side */
+.left {
+  margin-top: 97px;
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+
+.clock-card {
+  margin-top: 40px;
+  margin-bottom: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  animation: fadeInUp 0.8s ease both;
+  user-select: none;
+}
+
+.clock-card #clock {
+  font-size: 6rem;
+  font-weight: 500;
+  color: #d86565;
+  animation: pulse 1.5s infinite alternate;
+}
+
+#date {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: #d86565;
+}
+
+.search-card {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.5);
+  animation: fadeInUp 0.8s ease both;
+}
+
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.search-card input {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  background: #222;
+  color: white;
+  transition: background 0.3s ease;
+}
+
+.search-card input:focus {
+  background: #333;
+}
+
+.search-card button {
+  padding: 10px 14px;
+  background: #d86565;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  user-select: none;
+}
+
+.search-card button:hover {
+  background: #ff0000;
+  color: #000;
+}
+
+.engine-icons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.engine-icons button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: #1e1e1e;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.engine-icons button:hover,
+.engine-icons button:focus {
+  transform: scale(1.2);
+  outline: none;
+}
+
+/* Bookmarks Grid */
+.bookmarks-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  max-width: 720px;
+  padding: 20px 0;
+  margin-top: 157px;
+  position: relative;
+  z-index: 20;
+}
+
+.bookmark-card {
+  background: #00000071;
+  border-radius: 2px;
+  border: 0.2px solid var(--border, #9333ea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: 100%;
+}
+
+.bookmark-card:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
+}
+
+.bookmark-card img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  padding: 8px;
+}
+
+.bookmark-card.big {
+  grid-column: span 2;
+  aspect-ratio: unset;
+  height: auto;
+  padding: 10px;
+}
+
+/* Footer */
+footer {
+  font-size: 1rem;
+  color: #aaa;
+  user-select: none;
+  text-align: center;
+  width: 100%;
+  margin-top: 0;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  } to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  } to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  } to {
+    transform: scale(1.02);
+  }
+}
+
+#todo-toggle {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  z-index: 50;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+#todo-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#todo-toggle img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* Todo Panel */
+#todo-panel {
+  position: absolute;
+  top: 70px;
+  left: 30px;
+  width: 280px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 2px solid #d86565;
+  border-radius: 10px;
+  padding: 16px;
+  color: white;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeInUp 0.3s ease;
+  z-index: 40;
+}
+
+#todo-panel h3 {
+  margin-bottom: 8px;
+  color: #d86565;
+  font-size: 1.1rem;
+}
+
+#todo-form {
+  display: flex;
+  gap: 6px;
+}
+
+#todo-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: white;
+}
+
+#todo-form button {
+  background: #d86565;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#todo-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#todo-list li {
+  position: relative;
+  padding: 6px 28px 6px 10px;
+  word-break: break-word;
+}
+
+#todo-list li button {
+  position: absolute;
+  top: 10px;
+  right: 6px;
+  color: white;
+  background-color: black;
+  font-size: 1.2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+#todo-list li.checked span.task-text {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+#todo-list {
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#todo-list::-webkit-scrollbar {
+  display: none;
+}
+
+.engine-icons button.active {
+  background-color: #d86565;
+  color: #000;
+  transform: scale(1.15);
+}
+
+#google-apps-wrapper {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  z-index: 100;
+  user-select: none;
+}
+
+#google-apps-btn {
+  background-color: #000;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 28px;
+  height: 28px;
+  justify-content: center;
+  align-items: center;
+}
+
+.dot-row {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  background-color: #d86565;
+  border-radius: 50%;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+#google-apps-btn .dot:hover {
+  transform: scale(1.6);
+}
+
+#google-apps-popup {
+  display: none;
+  position: absolute;
+  top: 38px;
+  right: 0;
+  background-color: #000;
+  border-radius: 10px;
+  padding: 8px 12px;
+  box-shadow: 0 0 10px #d8656588;
+  grid-template-columns: repeat(3, 36px);
+  gap: 12px;
+  width: max-content;
+}
+
+#google-apps-popup a.app-icon img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#google-apps-popup a.app-icon img:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 8px #d8656588;
+}
+
+/* ✅ Responsive adjustments */
+
+/* Tablet (≤ 1024px) */
+@media (max-width: 1024px) {
+  .main-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    margin-left: 0;
+  }
+
+  .left {
+    width: 100%;
+    margin-top: 40px;
+    align-items: center;
+  }
+
+  .bookmarks-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 500px;
+    margin-top: 80px;
+  }
+
+  .bookmark-card img {
+    width: 40px;
+    height: 40px;
+  }
+
+  #todo-panel {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 350px;
+  }
+}
+
+/* Phone (≤ 600px) */
+@media (max-width: 600px) {
+  .main-layout {
+    flex-direction: column;
+    gap: 30px;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  .greeting {
+    margin-left: 0;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .clock-card #clock {
+    font-size: 3rem;
+  }
+
+  #date {
+    font-size: 0.8rem;
+  }
+
+  .bookmarks-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 40px;
+  }
+
+  .bookmark-card img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .search-card {
+    width: 100%;
+  }
+
+  footer {
+    font-size: 0.8rem;
+  }
+
+  #google-apps-wrapper {
+    top: 15px;
+    right: 15px;
+  }
+
+  #todo-toggle {
+    top: 15px;
+    left: 15px;
+  }
+}
+
+
+
+.bookmarks-grid .bookmark-card[data-link*="chat.openai.com"] {
+  grid-row: span 2;      /* spans 2 rows vertically */
+  grid-column: span 1;   /* optional: make it wider horizontally */
+  aspect-ratio: auto;    /* remove any forced square ratio */
+  padding: 10px;
+}
+
+.bookmarks-grid .bookmark-card[data-link*="chat.openai.com"] img {
+  width: 55px;  /* increase image size */
+  height: 55px;
+}
