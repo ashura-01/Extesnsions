@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "Dark Tab stable",
+  "version": "1.0",
+  "description": "A beautiful custom new tab page.",
+  "icons": {
+    "128": "icon.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "darktab@local",
+      "strict_min_version": "109.0"
+    }
+  }
+}
