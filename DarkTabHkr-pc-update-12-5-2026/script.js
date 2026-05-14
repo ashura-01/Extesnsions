@@ -477,6 +477,7 @@ const bookmarkSaveBtn = document.getElementById('bookmark-save-btn');
 const bookmarkResetBtn = document.getElementById('bookmark-reset-btn');
 // New input for editing bookmark title
 const bookmarkTitleInput = document.getElementById('bookmark-title-input');
+const bookmarkColorInput = document.getElementById('bookmark-color-input');
 
 // Capture original defaults from HTML before any overrides
 const bookmarkDefaults = [];
@@ -484,7 +485,8 @@ bookmarkCards.forEach((card, i) => {
   bookmarkDefaults.push({
     label: card.getAttribute('title') || `Bookmark ${i + 1}`,
     url: card.getAttribute('data-link') || '',
-    img: card.querySelector('img') ? card.querySelector('img').getAttribute('src') : ''
+    img: card.querySelector('img') ? card.querySelector('img').getAttribute('src') : '',
+    color: card.style.getPropertyValue('--border') || ''
   });
 });
 
@@ -510,6 +512,7 @@ function applyBookmarkOverrides() {
     if (override.url) card.setAttribute('data-link', override.url);
     const img = card.querySelector('img');
     if (img && override.img) img.src = override.img;
+    if (override.color) card.style.setProperty('--border', override.color);
     // Update select option text
     const opt = bookmarkSelect.options[i];
     if (opt) opt.textContent = override.label || card.getAttribute('title') || `Bookmark ${i + 1}`;
@@ -530,6 +533,9 @@ bookmarkSelect.addEventListener('change', () => {
   bookmarkTitleInput.value = override.label || card.getAttribute('title') || '';
   bookmarkImgFile.value = '';
   pendingImgData = null;
+  // Populate border color picker
+  const currentColor = override.color || card.style.getPropertyValue('--border') || '#ffffff';
+  bookmarkColorInput.value = /^#[0-9a-fA-F]{6}$/.test(currentColor.trim()) ? currentColor.trim() : '#ffffff';
 });
 
 // Init fill on page load
@@ -561,11 +567,13 @@ bookmarkSaveBtn.addEventListener('click', () => {
   const newUrl = bookmarkUrlInput ? bookmarkUrlInput.value.trim() : '';
   const newImg = pendingImgData || bookmarkImgUrl.value.trim();
   const newLabel = bookmarkTitleInput.value.trim();
+  const newColor = bookmarkColorInput.value;
 
   if (!saved[i]) saved[i] = {};
   if (newUrl) saved[i].url = newUrl;
   if (newImg) saved[i].img = newImg;
   if (newLabel) saved[i].label = newLabel;
+  if (newColor) saved[i].color = newColor;
 
   localStorage.setItem('bookmarkOverrides', JSON.stringify(saved));
 
@@ -573,6 +581,7 @@ bookmarkSaveBtn.addEventListener('click', () => {
   if (newLabel) card.setAttribute('title', newLabel);
   const img = card.querySelector('img');
   if (img && newImg) img.src = newImg;
+  if (newColor) card.style.setProperty('--border', newColor);
   // Update select option text
   const opt = bookmarkSelect.options[i];
   if (opt) opt.textContent = newLabel || card.getAttribute('title') || `Bookmark ${i + 1}`;
@@ -597,12 +606,15 @@ bookmarkResetBtn.addEventListener('click', () => {
   card.setAttribute('title', bookmarkDefaults[i].label);
   const img = card.querySelector('img');
   if (img) img.src = bookmarkDefaults[i].img;
+  if (bookmarkDefaults[i].color) card.style.setProperty('--border', bookmarkDefaults[i].color);
 
   // Reset inputs
   if (bookmarkUrlInput) bookmarkUrlInput.value = bookmarkDefaults[i].url;
   bookmarkImgUrl.value = '';
   bookmarkImgFile.value = '';
   bookmarkTitleInput.value = bookmarkDefaults[i].label;
+  bookmarkColorInput.value = /^#[0-9a-fA-F]{6}$/.test((bookmarkDefaults[i].color || '').trim())
+    ? bookmarkDefaults[i].color.trim() : '#ffffff';
   pendingImgData = null;
 
   // Reset option text
