@@ -63,7 +63,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // FEATURE: persist todo panel open/closed state across reloads & browser restarts
-  panel.style.display = todoVisible ? "flex" : "none";
+  setPanelVisibility(todoVisible, false);
 });
 
 // Consolidated Accent Color Listener
@@ -352,16 +352,47 @@ document.querySelectorAll('.bookmark-card').forEach(card => {
 // FEATURE: Panel state (open/closed) persists across reloads and browser restarts via localStorage
 // Close by clicking the task toggle icon
 // =========================
+// Updated Todo toggle behavior: single click shows panel without input form, double click shows panel with input form
 const toggleBtn = document.getElementById("todo-toggle");
 const panel = document.getElementById("todo-panel");
+const todoForm = document.getElementById("todo-form");
 
-toggleBtn.addEventListener("click", () => {
-  const isVisible = panel.style.display === "flex";
-  panel.style.display = isVisible ? "none" : "flex";
-  localStorage.setItem("todoPanelVisible", String(!isVisible));
+let clickTimeout = null;
+
+// Helper to set panel and form visibility
+function setPanelVisibility(show, showForm) {
+  panel.style.display = show ? "flex" : "none";
+  // Persist visibility state
+  localStorage.setItem("todoPanelVisible", String(show));
+  todoForm.style.display = showForm ? "flex" : "none";
+}
+
+// Single click: toggle panel visibility, hide form
+toggleBtn.addEventListener("click", (e) => {
+  // Use timeout to allow double-click detection
+  if (clickTimeout) clearTimeout(clickTimeout);
+  clickTimeout = setTimeout(() => {
+    const isVisible = panel.style.display === "flex";
+    if (isVisible) {
+      // hide panel
+      setPanelVisibility(false, false);
+    } else {
+      // show panel without form
+      setPanelVisibility(true, false);
+    }
+  }, 250);
 });
 
-const todoForm = document.getElementById("todo-form");
+// Double click: show panel with form (input field and add button)
+// Also ensures panel stays open
+toggleBtn.addEventListener("dblclick", (e) => {
+  if (clickTimeout) clearTimeout(clickTimeout);
+  // Show panel and form
+  setPanelVisibility(true, true);
+});
+
+
+// Duplicate todoForm definition removed
 const todoInput = document.getElementById("todo-input");
 const todoList = document.getElementById("todo-list");
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
@@ -439,11 +470,13 @@ renderTodos();
 // =========================
 const bookmarkCards = document.querySelectorAll('.bookmark-card');
 const bookmarkSelect = document.getElementById('bookmark-select');
-const bookmarkUrlInput = document.getElementById('bookmark-url-input');
+const bookmarkUrlInput = document.getElementById('bookmark-url-input'); // may be null if not in HTML
 const bookmarkImgUrl = document.getElementById('bookmark-img-url');
 const bookmarkImgFile = document.getElementById('bookmark-img-file');
 const bookmarkSaveBtn = document.getElementById('bookmark-save-btn');
 const bookmarkResetBtn = document.getElementById('bookmark-reset-btn');
+// New input for editing bookmark title
+const bookmarkTitleInput = document.getElementById('bookmark-title-input');
 
 // Capture original defaults from HTML before any overrides
 const bookmarkDefaults = [];
@@ -473,9 +506,13 @@ function applyBookmarkOverrides() {
   bookmarkCards.forEach((card, i) => {
     const override = saved[i];
     if (!override) return;
+    if (override.label) card.setAttribute('title', override.label);
     if (override.url) card.setAttribute('data-link', override.url);
     const img = card.querySelector('img');
     if (img && override.img) img.src = override.img;
+    // Update select option text
+    const opt = bookmarkSelect.options[i];
+    if (opt) opt.textContent = override.label || card.getAttribute('title') || `Bookmark ${i + 1}`;
   });
 }
 
@@ -488,8 +525,9 @@ bookmarkSelect.addEventListener('change', () => {
   const saved = getSavedBookmarks();
   const override = saved[i] || {};
 
-  bookmarkUrlInput.value = override.url || card.getAttribute('data-link') || '';
+  if (bookmarkUrlInput) bookmarkUrlInput.value = override.url || card.getAttribute('data-link') || '';
   bookmarkImgUrl.value = (override.img && !override.img.startsWith('data:')) ? override.img : '';
+  bookmarkTitleInput.value = override.label || card.getAttribute('title') || '';
   bookmarkImgFile.value = '';
   pendingImgData = null;
 });
@@ -520,18 +558,24 @@ bookmarkSaveBtn.addEventListener('click', () => {
   const card = bookmarkCards[i];
   const saved = getSavedBookmarks();
 
-  const newUrl = bookmarkUrlInput.value.trim();
+  const newUrl = bookmarkUrlInput ? bookmarkUrlInput.value.trim() : '';
   const newImg = pendingImgData || bookmarkImgUrl.value.trim();
+  const newLabel = bookmarkTitleInput.value.trim();
 
   if (!saved[i]) saved[i] = {};
   if (newUrl) saved[i].url = newUrl;
   if (newImg) saved[i].img = newImg;
+  if (newLabel) saved[i].label = newLabel;
 
   localStorage.setItem('bookmarkOverrides', JSON.stringify(saved));
 
   if (newUrl) card.setAttribute('data-link', newUrl);
+  if (newLabel) card.setAttribute('title', newLabel);
   const img = card.querySelector('img');
   if (img && newImg) img.src = newImg;
+  // Update select option text
+  const opt = bookmarkSelect.options[i];
+  if (opt) opt.textContent = newLabel || card.getAttribute('title') || `Bookmark ${i + 1}`;
 
   bookmarkSaveBtn.textContent = 'Saved!';
   setTimeout(() => bookmarkSaveBtn.textContent = 'Save', 1500);
@@ -548,15 +592,155 @@ bookmarkResetBtn.addEventListener('click', () => {
   delete saved[i];
   localStorage.setItem('bookmarkOverrides', JSON.stringify(saved));
 
+  // Restore defaults
   card.setAttribute('data-link', bookmarkDefaults[i].url);
+  card.setAttribute('title', bookmarkDefaults[i].label);
   const img = card.querySelector('img');
   if (img) img.src = bookmarkDefaults[i].img;
 
-  bookmarkUrlInput.value = bookmarkDefaults[i].url;
+  // Reset inputs
+  if (bookmarkUrlInput) bookmarkUrlInput.value = bookmarkDefaults[i].url;
   bookmarkImgUrl.value = '';
   bookmarkImgFile.value = '';
+  bookmarkTitleInput.value = bookmarkDefaults[i].label;
   pendingImgData = null;
+
+  // Reset option text
+  const opt = bookmarkSelect.options[i];
+  if (opt) opt.textContent = bookmarkDefaults[i].label;
 
   bookmarkResetBtn.textContent = 'Reset!';
   setTimeout(() => bookmarkResetBtn.textContent = 'Reset to Default', 1500);
 });
+
+// =========================
+// Todo Panel — Drag to Reposition
+// Only active in view mode (when todoForm is hidden)
+// Position persists across reloads via localStorage
+// =========================
+(function initTodoDrag() {
+  let dragging = false;
+  let startX, startY, origLeft, origTop;
+
+  // Restore saved position
+  const savedPos = JSON.parse(localStorage.getItem('todoPanelPos') || 'null');
+  if (savedPos) {
+    panel.style.position = 'fixed';
+    panel.style.left = savedPos.left + 'px';
+    panel.style.top = savedPos.top + 'px';
+    panel.style.right = 'auto';
+    panel.style.bottom = 'auto';
+  }
+
+  function isViewMode() {
+    return todoForm.style.display === 'none' || todoForm.style.display === '';
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  panel.addEventListener('mousedown', (e) => {
+    // Only drag in view mode; ignore clicks on buttons/inputs/checkboxes
+    if (!isViewMode()) return;
+    if (e.target.closest('button, input, a, .task-checkbox')) return;
+
+    dragging = true;
+    panel.style.position = 'fixed';
+    panel.style.right = 'auto';
+    panel.style.bottom = 'auto';
+
+    const rect = panel.getBoundingClientRect();
+    // Ensure left/top reflect current position before dragging
+    panel.style.left = rect.left + 'px';
+    panel.style.top = rect.top + 'px';
+
+    startX = e.clientX;
+    startY = e.clientY;
+    origLeft = rect.left;
+    origTop = rect.top;
+
+    panel.style.cursor = 'grabbing';
+    panel.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    const newLeft = clamp(origLeft + dx, 0, window.innerWidth - panel.offsetWidth);
+    const newTop = clamp(origTop + dy, 0, window.innerHeight - panel.offsetHeight);
+
+    panel.style.left = newLeft + 'px';
+    panel.style.top = newTop + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    panel.style.cursor = '';
+    panel.style.userSelect = '';
+
+    // Persist position
+    localStorage.setItem('todoPanelPos', JSON.stringify({
+      left: parseFloat(panel.style.left),
+      top: parseFloat(panel.style.top)
+    }));
+  });
+
+  // Touch support
+  panel.addEventListener('touchstart', (e) => {
+    if (!isViewMode()) return;
+    if (e.target.closest('button, input, a, .task-checkbox')) return;
+
+    const touch = e.touches[0];
+    dragging = true;
+    panel.style.position = 'fixed';
+    panel.style.right = 'auto';
+    panel.style.bottom = 'auto';
+
+    const rect = panel.getBoundingClientRect();
+    panel.style.left = rect.left + 'px';
+    panel.style.top = rect.top + 'px';
+
+    startX = touch.clientX;
+    startY = touch.clientY;
+    origLeft = rect.left;
+    origTop = rect.top;
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    const touch = e.touches[0];
+    const dx = touch.clientX - startX;
+    const dy = touch.clientY - startY;
+
+    const newLeft = clamp(origLeft + dx, 0, window.innerWidth - panel.offsetWidth);
+    const newTop = clamp(origTop + dy, 0, window.innerHeight - panel.offsetHeight);
+
+    panel.style.left = newLeft + 'px';
+    panel.style.top = newTop + 'px';
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('touchend', () => {
+    if (!dragging) return;
+    dragging = false;
+
+    localStorage.setItem('todoPanelPos', JSON.stringify({
+      left: parseFloat(panel.style.left),
+      top: parseFloat(panel.style.top)
+    }));
+  });
+
+  // Show grab cursor on hover in view mode
+  panel.addEventListener('mouseover', () => {
+    if (isViewMode()) panel.style.cursor = 'grab';
+  });
+  panel.addEventListener('mouseout', () => {
+    if (!dragging) panel.style.cursor = '';
+  });
+})();
