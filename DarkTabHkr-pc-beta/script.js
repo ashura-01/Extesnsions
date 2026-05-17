@@ -25,19 +25,6 @@ const store = {
 };
 
 // =========================
-// Secure API Key Storage
-// Keys are obfuscated with btoa — not encryption, but stops casual shoulder-surf
-// and plain-text grep in DevTools. Never log or expose via innerHTML.
-// =========================
-const secureStore = {
-  _encode(val) { try { return btoa(unescape(encodeURIComponent(val))); } catch { return ''; } },
-  _decode(val) { try { return decodeURIComponent(escape(atob(val))); } catch { return ''; } },
-  set(key, val) { return store.set('_s_' + key, this._encode(val)); },
-  get(key, fallback = '') { const v = store.get('_s_' + key, null); return v ? this._decode(v) : fallback; },
-  remove(key) { store.remove('_s_' + key); }
-};
-
-// =========================
 // Safe URL validator — prevents javascript: and data: href injection
 // =========================
 function isSafeUrl(url) {
@@ -223,100 +210,62 @@ window.addEventListener('DOMContentLoaded', () => {
   const todoVisible = store.get('todoPanelVisible') === 'true';
   setPanelVisibility(todoVisible, false);
 
-  // AI settings — use secureStore for API key, regular store for others
-  const aiBaseUrl    = document.getElementById('ai-base-url');
-  const aiApiKey     = document.getElementById('ai-api-key');
-  const aiModel      = document.getElementById('ai-model');
-  const aiQuoteStyle = document.getElementById('ai-quote-style');
-  const aiSaveBtn    = document.getElementById('ai-save-btn');
-
-  if (aiBaseUrl)    aiBaseUrl.value    = store.get('aiBaseUrl', '');
-  if (aiApiKey)     aiApiKey.value     = secureStore.get('aiApiKey', '');  // ← secure
-  if (aiModel)      aiModel.value      = store.get('aiModel', '');
-  if (aiQuoteStyle) aiQuoteStyle.value = store.get('aiQuoteStyle', 'motivational');
+  // Custom Quotes settings
+  const quotesInput   = document.getElementById('custom-quotes-input');
+  const quotesSaveBtn = document.getElementById('quotes-save-btn');
+  const quotesError   = document.getElementById('quotes-error');
 
   if (userNameInput) userNameInput.value = store.get('userName', '');
 
-  aiSaveBtn?.addEventListener('click', () => {
-    store.set('aiBaseUrl', aiBaseUrl?.value.trim() || '');
-    secureStore.set('aiApiKey', aiApiKey?.value.trim() || '');  // ← secure
-    store.set('aiModel', aiModel?.value.trim() || '');
-    store.set('aiQuoteStyle', aiQuoteStyle?.value.trim() || 'motivational');
-    store.remove('aiQuoteCache');
-    aiSaveBtn.textContent = 'Fetching...';
-    loadQuote(true).then(() => {
-      aiSaveBtn.textContent = 'Saved!';
-      setTimeout(() => aiSaveBtn.textContent = 'Save & Refresh', 1500);
-    });
+  // Populate textarea with saved quotes
+  if (quotesInput) {
+    const saved = store.getJSON('customQuotes', null);
+    if (Array.isArray(saved) && saved.length) {
+      quotesInput.value = JSON.stringify(saved, null, 2);
+    }
+  }
+
+  quotesSaveBtn?.addEventListener('click', () => {
+    if (!quotesInput || !quotesError) return;
+    quotesError.textContent = '';
+    const raw = quotesInput.value.trim();
+
+    // Validate JSON
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      quotesError.textContent = 'Invalid JSON — check your format.';
+      return;
+    }
+
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      quotesError.textContent = 'Must be a non-empty JSON array of strings.';
+      return;
+    }
+
+    // Filter to strings only
+    const quotes = parsed.filter(q => typeof q === 'string' && q.trim().length > 0);
+    if (quotes.length === 0) {
+      quotesError.textContent = 'No valid string entries found in the array.';
+      return;
+    }
+
+    const ok = store.setJSON('customQuotes', quotes);
+    if (!ok) {
+      quotesError.textContent = 'Could not save — storage may be full.';
+      return;
+    }
+
+    loadQuote();
+    quotesSaveBtn.textContent = 'Saved!';
+    setTimeout(() => quotesSaveBtn.textContent = 'Save Quotes', 1500);
   });
 });
 
 // =========================
-// AI Quote System
+// Quote System — custom quotes only, no AI API
 // =========================
-function getAISettings() {
-  return {
-    baseUrl: store.get('aiBaseUrl', ''),
-    apiKey:  secureStore.get('aiApiKey', ''),  // ← secure read
-    model:   store.get('aiModel', ''),
-    style:   store.get('aiQuoteStyle', 'motivational')
-  };
-}
-
-function getTodayKey() {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-}
-
-async function fetchAIQuote(forceRefresh) {
-  const { baseUrl, apiKey, model, style } = getAISettings();
-  if (!baseUrl || !apiKey || !model) return null;
-
-  // Validate baseUrl is a safe URL before fetching
-  if (!isSafeUrl(baseUrl)) return null;
-
-  const todayKey = getTodayKey();
-  if (!forceRefresh) {
-    const cached = store.getJSON('aiQuoteCache');
-    if (cached?.key === todayKey && cached?.quote) return cached.quote;
-  }
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
-
-  try {
-    const res = await fetch(`${baseUrl.replace(/\/$/, '')}/chat/completions`, {
-      method: 'POST',
-      signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: 60,
-        messages: [{
-          role: 'user',
-          content: `Give me one short ${style} quote. Max 12 words. Reply with ONLY the quote, no quote marks, no attribution, no explanation.`
-        }]
-      })
-    });
-
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    const quote = data?.choices?.[0]?.message?.content?.trim();
-    if (quote) {
-      store.setJSON('aiQuoteCache', { key: todayKey, quote });
-      return quote;
-    }
-  } catch (err) {
-    clearTimeout(timeout);
-    if (err.name !== 'AbortError') console.warn('[NewTab] Quote fetch failed:', err.message);
-  }
-  return null;
-}
-
 const FALLBACK_QUOTES = [
   'Discipline or regret. Pick one.',
   'Nobody cares. Work harder.',
@@ -328,19 +277,19 @@ const FALLBACK_QUOTES = [
   'Shut up. Put in the work.'
 ];
 
-async function loadQuote(forceRefresh = false) {
+function loadQuote() {
   if (!motivationEl) return;
-  const aiQuote = await fetchAIQuote(forceRefresh);
-  if (aiQuote) { motivationEl.textContent = aiQuote; return; }
 
-  const cached = store.getJSON('aiQuoteCache');
-  if (cached?.quote) { motivationEl.textContent = cached.quote; return; }
+  const custom = store.getJSON('customQuotes', null);
+  const pool = (Array.isArray(custom) && custom.length > 0) ? custom : FALLBACK_QUOTES;
 
+  // Rotate by day so quote changes daily but stays consistent within the day
   const d = new Date();
-  motivationEl.textContent = FALLBACK_QUOTES[(d.getDate() + d.getMonth()) % FALLBACK_QUOTES.length];
+  const idx = (d.getFullYear() * 1000 + d.getMonth() * 31 + d.getDate()) % pool.length;
+  motivationEl.textContent = pool[idx];
 }
 
-loadQuote(false);
+loadQuote();
 
 // =========================
 // Google Apps panel toggle
