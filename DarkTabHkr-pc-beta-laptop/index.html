@@ -178,7 +178,7 @@
       <div id="settings-tabs">
         <button class="stab active" data-tab="tab-theme">Theme</button>
         <button class="stab" data-tab="tab-bookmarks">BookMarks</button>
-        <button class="stab" data-tab="tab-ai"> Motivation</button>
+        <button class="stab" data-tab="tab-ai">Motivation</button>
       </div>
 
       <!-- Theme tab -->
@@ -212,17 +212,17 @@
         </div>
       </div>
 
-      <!-- AI Quotes tab -->
+      <!-- Custom Quotes tab -->
       <div id="tab-ai" class="stab-content">
-        <label>API Base URL</label>
-        <input type="text" id="ai-base-url" placeholder="https://api.groq.com/openai/v1" />
-        <label>API Key</label>
-        <input type="password" id="ai-api-key" placeholder="sk-..." />
-        <label>Model</label>
-        <input type="text" id="ai-model" placeholder="llama-3.3-70b-versatile" />
-        <label>Quote Style</label>
-        <input type="text" id="ai-quote-style" placeholder="motivational, villain, evil..." />
-        <button id="ai-save-btn" class="sp-btn-primary" style="margin-top:4px;">Save &amp; Refresh</button>
+        <label>Custom Quotes <span style="font-size:0.75em;opacity:0.6;">(JSON array of strings)</span></label>
+        <textarea
+          id="custom-quotes-input"
+          rows="8"
+          placeholder='["Discipline or regret. Pick one.", "Consistency is the only superpower.", "Burn the boats. No retreat."]'
+          style="width:100%;box-sizing:border-box;resize:vertical;font-family:monospace;font-size:0.8em;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.3);color:inherit;"
+        ></textarea>
+        <div id="quotes-error" style="color:#ff6b6b;font-size:0.78em;min-height:1.2em;margin-top:2px;"></div>
+        <button id="quotes-save-btn" class="sp-btn-primary" style="margin-top:4px;">Save Quotes</button>
       </div>
     </div>
 
