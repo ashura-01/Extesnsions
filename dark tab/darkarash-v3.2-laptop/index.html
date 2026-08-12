@@ -11,6 +11,7 @@
 </head>
 
 <body>
+  <canvas id="matrix-rain-canvas" aria-hidden="true"></canvas>
   <div class="overlay">
     <h1 class="greeting" id="greeting">Hello</h1>
 
@@ -187,6 +188,22 @@
         <input type="text" id="user-name" placeholder="Enter your name" />
         <label>Accent Color</label>
         <input type="color" id="color-picker">
+        <label>Matrix Rain Color</label>
+        <input type="color" id="matrix-color-picker" value="#00ff41">
+        <label>Matrix Rain</label>
+        <button type="button" id="matrix-toggle-btn" class="toggle-btn" aria-pressed="false">Off</button>
+        <label>Matrix Opacity</label>
+        <div class="stepper-control">
+          <button type="button" id="matrix-opacity-decrement" class="step-btn" aria-label="Decrease matrix rain opacity">−</button>
+          <span id="matrix-opacity-value" class="step-value">90%</span>
+          <button type="button" id="matrix-opacity-increment" class="step-btn" aria-label="Increase matrix rain opacity">+</button>
+        </div>
+        <label>Matrix Font Size</label>
+        <div class="stepper-control">
+          <button type="button" id="matrix-fontsize-decrement" class="step-btn" aria-label="Decrease matrix rain font size">−</button>
+          <span id="matrix-fontsize-value" class="step-value">15px</span>
+          <button type="button" id="matrix-fontsize-increment" class="step-btn" aria-label="Increase matrix rain font size">+</button>
+        </div>
         <label>Background</label>
         <input type="file" id="bg-picker" accept="image/*">
         <label>Background Blur</label>

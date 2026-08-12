@@ -207,6 +207,216 @@ function applyGoogleFont(familyName, cssHref) {
 }
 
 // =========================
+// Matrix Rain — lightweight canvas effect, top-right corner only
+// - No React, no per-frame allocations beyond a small drops array
+// - 20fps ceiling, pauses when tab/canvas isn't visible
+// - When off: no rAF, no listeners, canvas buffer freed — zero cost
+// - Trail fade uses 'destination-out' compositing, which erodes the
+//   alpha of previously-drawn glyphs instead of painting a dark
+//   rectangle over the canvas — so there is never a dark box, only
+//   the falling characters themselves.
+// =========================
+(function () {
+  const canvas      = document.getElementById('matrix-rain-canvas');
+  const toggleBtn   = document.getElementById('matrix-toggle-btn');
+  const colorPicker = document.getElementById('matrix-color-picker');
+
+  const opacityDecBtn  = document.getElementById('matrix-opacity-decrement');
+  const opacityIncBtn  = document.getElementById('matrix-opacity-increment');
+  const opacityValueEl = document.getElementById('matrix-opacity-value');
+
+  const fontDecBtn  = document.getElementById('matrix-fontsize-decrement');
+  const fontIncBtn  = document.getElementById('matrix-fontsize-increment');
+  const fontValueEl = document.getElementById('matrix-fontsize-value');
+
+  if (!canvas) return;
+
+  const DEFAULT_COLOR = '#00ff41';
+  // Exact glyph set from the reference React component
+  const GLYPHS = '01アイウエオカキクケコサシスセソ$#+*<>[]{}';
+
+  // Column spacing is fixed and NEVER changes with font size — only the
+  // rendered glyph size changes, per spec ("only font size, not distance
+  // among each rain").
+  const COLUMN_PITCH = 15; // horizontal distance between rain streams
+  const ROW_PITCH = 26;    // vertical distance between characters in a stream
+  const FONT_MIN = 8, FONT_MAX = 28, FONT_STEP = 1;
+  const OPACITY_MIN = 5, OPACITY_MAX = 100, OPACITY_STEP = 5;
+
+  const ctx = canvas.getContext('2d', { alpha: true });
+  const frameInterval = 1000 / 20; // ~20fps ceiling
+
+  let width = 0, height = 0, drops = [];
+  let rafId = null;
+  let running = false;   // engine loop active
+  let visible = true;    // canvas/tab currently visible
+  let lastFrame = 0;
+  let resizeTimer = null;
+  let io = null;
+
+  let color = DEFAULT_COLOR;
+  let fontSize = parseInt(store.get('matrixFontSize'), 10);
+  if (isNaN(fontSize)) fontSize = 15;
+  fontSize = Math.min(FONT_MAX, Math.max(FONT_MIN, fontSize));
+
+  let opacityPct = parseInt(store.get('matrixOpacity'), 10);
+  if (isNaN(opacityPct)) opacityPct = 90;
+  opacityPct = Math.min(OPACITY_MAX, Math.max(OPACITY_MIN, opacityPct));
+
+  function hexToRgba(hex, alpha) {
+    let h = (hex || '').replace('#', '');
+    if (h.length === 3) h = h.split('').map(c => c + c).join('');
+    const num = parseInt(h, 16);
+    if (isNaN(num)) return `rgba(0,255,65,${alpha})`;
+    const r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+
+  function applyOpacityUI(pct) {
+    if (opacityValueEl) opacityValueEl.textContent = `${pct}%`;
+    if (running) canvas.style.opacity = (pct / 100).toString();
+  }
+
+  function applyFontSizeUI(px) {
+    if (fontValueEl) fontValueEl.textContent = `${px}px`;
+  }
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    width = Math.floor(rect.width);
+    height = Math.floor(rect.height);
+    if (!width || !height) return;
+    canvas.width = width;
+    canvas.height = height;
+    const columns = Math.max(1, Math.floor(width / COLUMN_PITCH));
+    drops = new Array(columns).fill(0).map(() => Math.random() * -40);
+  }
+
+  function draw(timestamp) {
+    if (!running) return;
+    rafId = requestAnimationFrame(draw);
+    if (!visible) return;
+    if (timestamp - lastFrame < frameInterval) return;
+    lastFrame = timestamp;
+
+    // Fade existing glyphs toward transparency (never paints a dark
+    // background — only erodes what's already drawn).
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+    ctx.fillRect(0, 0, width, height);
+    ctx.globalCompositeOperation = 'source-over';
+
+    ctx.font = `${fontSize}px monospace`;
+    ctx.textBaseline = 'top';
+
+    for (let i = 0; i < drops.length; i++) {
+      const glyph = GLYPHS[(Math.random() * GLYPHS.length) | 0];
+      const x = i * COLUMN_PITCH;
+      const y = drops[i] * ROW_PITCH;
+      const leading = Math.random() > 0.93;
+      ctx.fillStyle = leading ? 'rgba(224, 231, 255, 1)' : hexToRgba(color, 0.75);
+      ctx.fillText(glyph, x, y);
+      if (y > height && Math.random() > 0.975) drops[i] = 0;
+      else drops[i]++;
+    }
+  }
+
+  function onResize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { if (running) resize(); }, 200);
+  }
+
+  function onVisibility() {
+    visible = document.visibilityState === 'visible';
+  }
+
+  function start() {
+    if (running) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    running = true;
+    canvas.style.opacity = (opacityPct / 100).toString();
+    resize();
+    lastFrame = 0;
+    window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVisibility);
+    if (!io) {
+      io = new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting && document.visibilityState === 'visible';
+      }, { threshold: 0 });
+    }
+    io.observe(canvas);
+    onVisibility();
+    rafId = requestAnimationFrame(draw);
+  }
+
+  function stop() {
+    running = false;
+    canvas.style.opacity = '0';
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    window.removeEventListener('resize', onResize);
+    document.removeEventListener('visibilitychange', onVisibility);
+    clearTimeout(resizeTimer);
+    if (io) io.disconnect();
+    // Free the backing buffer so an idle rain truly costs nothing
+    canvas.width = 0;
+    canvas.height = 0;
+    drops = [];
+  }
+
+  function setToggleUI(on) {
+    if (!toggleBtn) return;
+    toggleBtn.textContent = on ? 'On' : 'Off';
+    toggleBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    toggleBtn.classList.toggle('on', on);
+  }
+
+  // Restore saved color, opacity, font size, and on/off state
+  color = store.get('matrixColor', DEFAULT_COLOR);
+  if (colorPicker) colorPicker.value = color;
+  applyOpacityUI(opacityPct);
+  applyFontSizeUI(fontSize);
+
+  const savedOn = store.get('matrixRainOn') === 'true';
+  setToggleUI(savedOn);
+  if (savedOn) start();
+
+  toggleBtn?.addEventListener('click', () => {
+    const next = !running;
+    if (next) start(); else stop();
+    setToggleUI(next);
+    store.set('matrixRainOn', String(next));
+  });
+
+  // Live preview while running; persisted alongside the rest of the theme
+  colorPicker?.addEventListener('input', e => { color = e.target.value; });
+
+  opacityDecBtn?.addEventListener('click', () => {
+    opacityPct = Math.max(OPACITY_MIN, opacityPct - OPACITY_STEP);
+    applyOpacityUI(opacityPct);
+  });
+  opacityIncBtn?.addEventListener('click', () => {
+    opacityPct = Math.min(OPACITY_MAX, opacityPct + OPACITY_STEP);
+    applyOpacityUI(opacityPct);
+  });
+
+  fontDecBtn?.addEventListener('click', () => {
+    fontSize = Math.max(FONT_MIN, fontSize - FONT_STEP);
+    applyFontSizeUI(fontSize);
+  });
+  fontIncBtn?.addEventListener('click', () => {
+    fontSize = Math.min(FONT_MAX, fontSize + FONT_STEP);
+    applyFontSizeUI(fontSize);
+  });
+
+  document.getElementById('theme-save-btn')?.addEventListener('click', () => {
+    if (colorPicker) store.set('matrixColor', colorPicker.value);
+    store.set('matrixOpacity', String(opacityPct));
+    store.set('matrixFontSize', String(fontSize));
+  });
+})();
+
+// =========================
 // DOMContentLoaded — Settings wiring
 // =========================
 let userName = store.get('userName', 'there');
