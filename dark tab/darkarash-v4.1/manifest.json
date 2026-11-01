@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "darkarash-v4.0",
+  "version": "4.0",
+  "description": "Highly customizable home page firefox extension, And its just for me",
+  "icons": {
+    "128": "icon.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "darktab@local",
+      "strict_min_version": "109.0"
+    }
+  },
+  "permissions": [
+    "<all_urls>"
+  ]
+}
